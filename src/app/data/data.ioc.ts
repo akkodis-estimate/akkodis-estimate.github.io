@@ -44,6 +44,8 @@ import {
 import {
     FetchProjectResourcesUseCase
 } from "../domain/usecases/resource-usecases/fetch-project-resources.usecase/fetch-project-resources.usecase";
+import {DeleteClientUseCase} from "../domain/usecases/client-usescases/delete-client-usecase/delete-client.usecase";
+import {UpdateClientUseCase} from "../domain/usecases/client-usescases/update-client-usecase/update-client.usecase";
 
 export const DATA_ACCOUNT_IOC: Provider[] = [
     {
@@ -96,6 +98,16 @@ export const DATA_CLIENT_IOC: Provider[] = [
         deps: [ClientRepository],
         provide: FetchClientsUseCase,
         useFactory: (repository: ClientRepository) => new FetchClientsUseCase(repository),
+    },
+    {
+        deps: [ClientRepository],
+        provide: DeleteClientUseCase,
+        useFactory: (repository: ClientRepository) => new DeleteClientUseCase(repository),
+    },
+    {
+        deps: [ClientRepository],
+        provide: UpdateClientUseCase,
+        useFactory: (repository: ClientRepository) => new UpdateClientUseCase(repository),
     }
 ];
 

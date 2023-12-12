@@ -32,4 +32,8 @@ export abstract class Mapper<T, R, E> {
             ? new Result<R[]>(true, "", this.fromEntities(params))
             : new Result<R[]>(false, "Not found", []);
     }
+
+    toEmptyResponse(): Result<{}> {
+        return new Result<{}>(true, "", {})
+    }
 }
