@@ -14,5 +14,5 @@ export abstract class IClientInteractor {
 
     abstract update(id: string, request: ClientRequest): Observable<Result<ClientResponse>>;
 
-    abstract delete(id: string): Observable<Result<ClientResponse>>;
+    abstract delete(id: string): Observable<Result<{}>>;
 }

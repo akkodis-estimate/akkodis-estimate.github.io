@@ -33,6 +33,7 @@ import {ClientsComponent} from './presenter/pages/clients/clients.component';
 import {SettingsComponent} from './presenter/pages/settings/settings.component';
 import {ResourcesComponent} from './presenter/pages/resources/resources.component';
 import {AccountsComponent} from './presenter/pages/accounts/accounts.component';
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
     declarations: [
@@ -61,6 +62,7 @@ import {AccountsComponent} from './presenter/pages/accounts/accounts.component';
         AngularFirestoreModule,
         AngularFireStorageModule,
         ToastrModule.forRoot(),
+        NgbModule
     ],
     providers: [
         ...DATA_ACCOUNT_IOC,

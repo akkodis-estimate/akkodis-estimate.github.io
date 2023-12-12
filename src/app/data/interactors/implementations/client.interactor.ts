@@ -1,4 +1,3 @@
-import {AccountRequest} from "../../requests/account.request";
 import {map, Observable, of} from "rxjs";
 import {ClientEntity} from "../../../domain/entities";
 import {Injectable} from "@angular/core";
@@ -14,6 +13,12 @@ import {
 import {
     FetchClientsUseCase
 } from "../../../domain/usecases/client-usescases/fetch-clients-usecase/fetch-clients.usecase";
+import {
+    DeleteClientUseCase
+} from "../../../domain/usecases/client-usescases/delete-client-usecase/delete-client.usecase";
+import {
+    UpdateClientUseCase
+} from "../../../domain/usecases/client-usescases/update-client-usecase/update-client.usecase";
 
 @Injectable({providedIn: 'root'})
 export class ClientInteractor extends IClientInteractor {
@@ -21,12 +26,13 @@ export class ClientInteractor extends IClientInteractor {
     mapper = new ClientMapper();
 
     constructor(private createClientUseCase: CreateClientUseCase,
+                private deleteClientUseCase: DeleteClientUseCase,
+                private updateClientUseCase: UpdateClientUseCase,
                 private fetchClientsUseCase: FetchClientsUseCase) {
         super();
     }
 
     create(request: ClientRequest): Observable<Result<ClientResponse>> {
-
         let entity: ClientEntity = this.mapper.fromRequest(request);
         entity.id = uuidv4();
         entity.createdAt = new Date();
@@ -35,8 +41,9 @@ export class ClientInteractor extends IClientInteractor {
             .pipe(map((e: ClientEntity) => this.mapper.toResponse(e)));
     }
 
-    delete(id: string): Observable<Result<ClientResponse>> {
-        return of();
+    delete(id: string): Observable<Result<{}>> {
+        this.deleteClientUseCase.execute(id);
+        return of(this.mapper.toEmptyResponse());
     }
 
     fetchAll(): Observable<Result<ClientResponse[]>> {
@@ -48,8 +55,8 @@ export class ClientInteractor extends IClientInteractor {
         return of();
     }
 
-    update(id: string, request: AccountRequest): Observable<Result<ClientResponse>> {
-        return of();
+    update(id: string, request: ClientRequest): Observable<Result<ClientResponse>> {
+        this.updateClientUseCase.execute({id: id, request: request});
+        return of(this.mapper.toEmptyResponse());
     }
-
 }
