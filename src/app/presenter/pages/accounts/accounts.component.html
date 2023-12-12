@@ -1,0 +1,199 @@
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title d-inline-block"><b>{{accounts?.length}}</b> Accounts </h4>
+                <a href="" class="btn btn-outline-primary float-right" data-bs-toggle="modal"
+                   data-bs-target="#addClientModal">Add</a>
+            </div>
+            <div class="card-block">
+                <div class="table-responsive">
+                    <table class="table mb-0 new-patient-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Firstname<span style="color: red;">*</span></th>
+                            <th>Lastname<span style="color: red;">*</span></th>
+                            <th>Email<span style="color: red;">*</span></th>
+                            <th>Role<span style="color: red;">*</span></th>
+                            <th></th>
+                            <th>Phone number</th>
+                            <th>Address</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr>
+                            <td>
+                                <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <input type="text"
+                                           formControlName="firstname"
+                                           placeholder="Firstname">
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <input type="text"
+                                           formControlName="lastname"
+                                           placeholder="Lastname">
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <input type="text"
+                                           formControlName="email"
+                                           placeholder="Email">
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <select formControlName="role">
+                                        <option value="" disabled>Select role</option>
+                                        <option *ngFor="let role of roles" style="color: black;"
+                                                [ngValue]="role">{{role}}</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>
+                                <img class="aspect-square" *ngIf="accountForm.valid" (click)="onSubmit()"
+                                     src="assets/images/check.png"
+                                     alt="check"
+                                     data-bs-toggle="tooltip"
+                                     data-bs-placement="top"
+                                     title="save">
+                            </td>
+                            <td>
+                                <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <input type="tel"
+                                           formControlName="phoneNumber"
+                                           placeholder="Phone number">
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <input type="text"
+                                           formControlName="address"
+                                           placeholder="Address">
+                                </form>
+                            </td>
+
+                        </tr>
+
+                        <tr *ngFor="let account of accounts">
+                            <td>
+                                <div class="row">
+                                    <div class="col-5 col-sm-5 col-md-4 col-lg-3 col-xl-3">
+                                        <img width="28" height="28" class="rounded-circle m-r-5"
+                                             src="assets/images/user.jpg"
+                                             alt="">
+                                    </div>
+                                    <div class="col"><h2>{{account.firstname}}</h2></div>
+                                </div>
+                            </td>
+                            <td>{{account.lastname}}</td>
+                            <td>{{account.email}}</td>
+                            <td>{{account.role}}</td>
+                            <td>{{account.phoneNumber}}</td>
+                            <td>{{account.address}}</td>
+                            <td>
+                                <img class="aspect-square action"
+                                     src="assets/images/delete.png"
+                                     alt="delete">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addClientModalLabel">Add new account</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+
+                <div class="modal-body row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="firstname">Firstname<span style="color: red;">*</span></label>
+                            <input type="text"
+                                   class="form-control"
+                                   formControlName="firstname"
+                                   placeholder="Firstname"
+                                   id="firstname">
+                            <small class="form-text text-muted text-danger"
+                                   *ngIf="accountForm.controls['firstname'].touched && accountForm.controls['firstname'].errors?.['required']">
+                                Please enter firstname!
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname">Lastname<span style="color: red;">*</span></label>
+                            <input type="text"
+                                   class="form-control"
+                                   formControlName="lastname"
+                                   placeholder="Lastname"
+                                   id="lastname">
+                            <small class="form-text text-muted text-danger"
+                                   *ngIf="accountForm.controls['lastname'].touched && accountForm.controls['lastname'].errors?.['required']">
+                                Please enter lastname!
+                            </small>
+                        </div>
+                        <div>
+                            <img src="assets/images/user.jpg">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="role">Role<span style="color: red;">*</span></label>
+                            <select formControlName="role" id="role" class="form-control">
+                                <option value="" disabled>Select role</option>
+                                <option *ngFor="let role of roles" style="color: black;"
+                                        [ngValue]="role">{{role}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email<span style="color: red;">*</span></label>
+                            <input type="email"
+                                   class="form-control"
+                                   formControlName="email"
+                                   placeholder="Email"
+                                   id="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone number</label>
+                            <input type="tel"
+                                   class="form-control"
+                                   formControlName="phoneNumber"
+                                   placeholder="Phone number"
+                                   id="phoneNumber">
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input type="tel"
+                                   class="form-control"
+                                   formControlName="address"
+                                   placeholder="Address"
+                                   id="address">
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="!accountForm.valid"
+                        (click)="onSubmit()">Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

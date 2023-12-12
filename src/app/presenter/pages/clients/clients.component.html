@@ -1,0 +1,162 @@
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title d-inline-block"><b
+                    *ngIf="clients">{{clients.length}}</b> Clients </h4>
+                <a href="" class="btn btn-outline-primary float-right" data-bs-toggle="modal"
+                   data-bs-target="#addClientModal">Add</a>
+            </div>
+            <div class="card-block">
+                <div class="table-responsive">
+                    <table class="table mb-0 new-patient-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Company name<span style="color: red;">*</span></th>
+                            <th>Email</th>
+                            <th>Phone number</th>
+                            <th>Address</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr>
+                            <td>
+                                <form [formGroup]="clientForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <input type="text"
+                                           formControlName="companyName"
+                                           placeholder="Company name"
+                                           id="companyName">
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="clientForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <input type="text"
+                                           formControlName="email"
+                                           placeholder="Email"
+                                           id="email">
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="clientForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <input type="tel"
+                                           formControlName="phoneNumber"
+                                           placeholder="Phone number"
+                                           id="phoneNumber">
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="clientForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <input type="text"
+                                           formControlName="address"
+                                           placeholder="Address"
+                                           id="address">
+                                </form>
+                            </td>
+                            <td>
+                                <img class="aspect-square" *ngIf="clientForm.valid" (click)="onSubmit()"
+                                     src="assets/images/check.png"
+                                     alt="check"
+                                     data-bs-toggle="tooltip"
+                                     data-bs-placement="top"
+                                     title="save">
+                            </td>
+                        </tr>
+
+                        <tr *ngFor="let client of clients">
+                            <td>
+                                <div class="row">
+                                    <div class="col-5 col-sm-5 col-md-4 col-lg-3 col-xl-3">
+                                        <img width="28" height="28" class="aspect-square" src="assets/images/user.jpg"
+                                             alt="">
+                                    </div>
+                                    <div class="col"><h2>{{client.companyName}}</h2></div>
+                                </div>
+                            </td>
+                            <td>{{client.email}}</td>
+                            <td>{{client.phoneNumber}}</td>
+                            <td>{{client.address}}</td>
+                            <td>
+                                <img class="aspect-square action"
+                                     src="assets/images/delete.png"
+                                     alt="delete">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addClientModalLabel">Add new client</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form [formGroup]="clientForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+
+                <div class="modal-body row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="clientCompanyName">Company name<span style="color: red;">*</span></label>
+                            <input type="companyName"
+                                   class="form-control"
+                                   formControlName="companyName"
+                                   placeholder="Company name"
+                                   id="clientCompanyName">
+                            <small class="form-text text-muted text-danger"
+                                   *ngIf="clientForm.controls['companyName'].touched && clientForm.controls['companyName'].errors?.['required']">
+                                Please enter company name.!
+                            </small>
+                        </div>
+                        <div>
+                            <img src="assets/images/user.jpg">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="clientEmail">Email</label>
+                            <input type="email"
+                                   class="form-control"
+                                   formControlName="email"
+                                   placeholder="Email"
+                                   id="clientEmail">
+                        </div>
+                        <div class="form-group">
+                            <label for="clientPhoneNumber">Phone number</label>
+                            <input type="tel"
+                                   class="form-control"
+                                   formControlName="phoneNumber"
+                                   placeholder="Phone number"
+                                   id="clientPhoneNumber">
+                        </div>
+                        <div class="form-group">
+                            <label for="clientAddress">Address</label>
+                            <input type="tel"
+                                   class="form-control"
+                                   formControlName="address"
+                                   placeholder="Address"
+                                   id="clientAddress">
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="!clientForm.valid"
+                        (click)="onSubmit()">Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

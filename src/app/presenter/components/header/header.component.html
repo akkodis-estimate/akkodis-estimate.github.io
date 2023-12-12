@@ -1,0 +1,20 @@
+<div class="header">
+    <div class="header-left">
+        <a (click)="onClickLogo()" class="logo pointer">
+            <img src="assets/images/logo.png" width="35" height="35" alt=""> <span>EstiMate</span>
+        </a>
+    </div>
+    <a id="toggle_btn" href="javascript:void(0);" (click)="onClickBars()"><i class="fa fa-bars"></i></a>
+    <a id="mobile_btn" class="mobile_btn float-left" href="#sidebar"><i class="fa fa-bars"></i></a>
+    <ul class="nav user-menu float-right">
+        <li class="nav-item dropdown">
+            <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
+                        <span class="user-img">
+							<img class="rounded-circle" src="assets/images/user.jpg" width="24" alt="Admin">
+						</span>
+                <span>{{loggedAccount.firstname}} {{loggedAccount.lastname}}</span>
+            </a>
+        </li>
+    </ul>
+</div>
+

@@ -1,0 +1,434 @@
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-2 pointer" (click)="onClickBack()"><img src="assets/images/arrow-left.png"
+                                                                    class="float-left"></div>
+            <div class="col"><h4 class="card-title"><b>{{project.title | uppercase}}</b></h4></div>
+            <div class="col-2">
+                <a href="" class="btn btn-outline-success float-right" (click)="onSubmitProject()">Save</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-block">
+        <form [formGroup]="projectForm" (ngSubmit)="onSubmitProject()" novalidate class="form-signin">
+            <div class="row m-3">
+                <div class=" col-12 form-group">
+                    <label for="title">Project title<span style="color: red;">*</span></label>
+                    <input type="text"
+                           class="form-control"
+                           formControlName="title"
+                           placeholder="Project title"
+                           id="title">
+                    <small class="form-text text-muted text-danger"
+                           *ngIf="projectForm.controls['title'].touched && projectForm.controls['title'].errors?.['required']">
+                        Please enter project title
+                    </small>
+                </div>
+                <div class="col-9 form-group">
+                    <label for="client">Client<span style="color: red;">*</span></label>
+
+                    <select formControlName="client" id="client" class="form-control">
+                        <option value="" disabled>Select client</option>
+                        <option *ngFor="let client of clients" style="color: black;"
+                                [ngValue]="client.id">{{client.companyName}}</option>
+                    </select>
+
+                </div>
+                <div class="col-3 form-group">
+                    <label for="duration">Duration(Months)</label>
+                    <input type="number"
+                           class="form-control"
+                           formControlName="duration"
+                           placeholder="Duration"
+                           id="duration">
+                </div>
+                <div class="col-12 form-group">
+                    <label for="description">Description</label>
+                    <textarea type="number"
+                              class="form-control"
+                              formControlName="description"
+                              placeholder="Description"
+                              id="description">
+            </textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title d-inline-block"><b
+                    *ngIf="resources">{{resources.length}}</b> Resources </h4>
+                <a href="" class="btn btn-outline-primary float-right" data-bs-toggle="modal"
+                   data-bs-target="#addProjectModal">Add</a>
+            </div>
+            <div class="card-block">
+                <div class="table-responsive scrollmenu m-3">
+                    <table class="table mb-0 new-patient-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Job title<span style="color: red;">*</span></th>
+                            <th>Basic salary<span style="color: red;">*</span></th>
+                            <th>Resource type<span style="color: red;">*</span></th>
+                            <th>Workload</th>
+                            <th>Actions</th>
+                            <th>Allowance</th>
+                            <th>Gratuity</th>
+                            <th>Insurance</th>
+                            <th>Flight ticket</th>
+                            <th>Work permit</th>
+                            <th>Office</th>
+                            <th>General support package</th>
+                            <th>Laptop workstation</th>
+                            <th>Licenses</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr>
+                            <td>
+                                <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <input type="text"
+                                           formControlName="jobTitle"
+                                           placeholder="Title of the resource"
+                                           id="jobTitle">
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <select formControlName="basicSalaryCurrency" (change)="onChangeBasicSalary()">
+                                        <option *ngFor="let currency of currencies"
+                                                [ngValue]="currency">{{currency}}</option>
+                                    </select>
+
+                                    <input type="number"
+                                           (change)="onChangeBasicSalary()"
+                                           formControlName="basicSalary"
+                                           placeholder="basic salary"
+                                           id="basicSalary">
+
+                                    <select formControlName="basicSalaryPeriod" (change)="onChangeBasicSalary()">
+                                        <option *ngFor="let period of periods"
+                                                [ngValue]="period">{{period}}</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <select formControlName="resourceType">
+                                        <option value="" disabled>Select resource type</option>
+                                        <option *ngFor="let type of resourceTypes" [ngValue]="type">{{type}}</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <input type="number"
+                                           formControlName="workload"
+                                           placeholder="Workload"
+                                           id="workload">
+                                </form>
+                            </td>
+                            <td>
+                                <img class="aspect-square" *ngIf="resourceForm.valid" (click)="onSubmit()"
+                                     src="assets/images/check.png"
+                                     alt="check"
+                                     data-bs-toggle="tooltip"
+                                     data-bs-placement="top"
+                                     title="save">
+                            </td>
+                            <td>
+                                <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <select formControlName="allowanceCurrency" style="color: black;">
+                                        <option *ngFor="let currency of currencies"
+                                                [ngValue]="currency">{{currency}}</option>
+                                    </select>
+                                    <input type="number"
+                                           formControlName="allowance"
+                                           placeholder="allowance"
+                                           id="allowance">
+                                    <select formControlName="allowancePeriod" *ngIf="periods.length > 0">
+                                        <option *ngFor="let period of periods" [ngValue]="period">{{period}}</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <select formControlName="gratuityCurrency" style="color: black;">
+                                        <option *ngFor="let currency of currencies"
+                                                [ngValue]="currency">{{currency}}</option>
+                                    </select>
+                                    <input type="number"
+                                           formControlName="gratuity"
+                                           placeholder="gratuity"
+                                           id="gratuity">
+                                    <select formControlName="gratuityPeriod" *ngIf="periods.length > 0">
+                                        <option *ngFor="let period of periods" [ngValue]="period">{{period}}</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <select formControlName="insuranceCurrency" style="color: black;">
+                                        <option *ngFor="let currency of currencies"
+                                                [ngValue]="currency">{{currency}}</option>
+                                    </select>
+                                    <input type="number"
+                                           formControlName="insurance"
+                                           placeholder="insurance"
+                                           id="insurance">
+                                    <select formControlName="insurancePeriod" *ngIf="periods.length > 0">
+                                        <option *ngFor="let period of periods" [ngValue]="period">{{period}}</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <select formControlName="flightTicketCurrency" style="color: black;">
+                                        <option *ngFor="let currency of currencies"
+                                                [ngValue]="currency">{{currency}}</option>
+                                    </select>
+                                    <input type="number"
+                                           formControlName="flightTicket"
+                                           placeholder="flightTicket"
+                                           id="flightTicket">
+                                    <select formControlName="flightTicketPeriod" *ngIf="periods.length > 0">
+                                        <option *ngFor="let period of periods" [ngValue]="period">{{period}}</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <select formControlName="workPermitCurrency" style="color: black;">
+                                        <option *ngFor="let currency of currencies"
+                                                [ngValue]="currency">{{currency}}</option>
+                                    </select>
+                                    <input type="number"
+                                           formControlName="workPermit"
+                                           placeholder="workPermit"
+                                           id="workPermit">
+                                    <select formControlName="workPermitPeriod" *ngIf="periods.length > 0">
+                                        <option *ngFor="let period of periods" [ngValue]="period">{{period}}</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <select formControlName="officeCurrency" style="color: black;">
+                                        <option *ngFor="let currency of currencies"
+                                                [ngValue]="currency">{{currency}}</option>
+                                    </select>
+                                    <input type="number"
+                                           formControlName="office"
+                                           placeholder="office"
+                                           id="office">
+                                    <select formControlName="officePeriod" *ngIf="periods.length > 0">
+                                        <option *ngFor="let period of periods" [ngValue]="period">{{period}}</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <select formControlName="generalSupportPackageCurrency" style="color: black;">
+                                        <option *ngFor="let currency of currencies"
+                                                [ngValue]="currency">{{currency}}</option>
+                                    </select>
+                                    <input type="number"
+                                           formControlName="generalSupportPackage"
+                                           placeholder="generalSupportPackage"
+                                           id="generalSupportPackage">
+                                    <select formControlName="generalSupportPackagePeriod" *ngIf="periods.length > 0">
+                                        <option *ngFor="let period of periods" [ngValue]="period">{{period}}</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <select formControlName="laptopWorkstationCurrency" style="color: black;">
+                                        <option *ngFor="let currency of currencies"
+                                                [ngValue]="currency">{{currency}}</option>
+                                    </select>
+                                    <input type="number"
+                                           formControlName="laptopWorkstation"
+                                           placeholder="laptopWorkstation"
+                                           id="laptopWorkstation">
+                                    <select formControlName="laptopWorkstationPeriod" *ngIf="periods.length > 0">
+                                        <option *ngFor="let period of periods" [ngValue]="period">{{period}}</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <select formControlName="licensesCurrency" style="color: black;">
+                                        <option *ngFor="let currency of currencies"
+                                                [ngValue]="currency">{{currency}}</option>
+                                    </select>
+                                    <input type="number"
+                                           formControlName="licenses"
+                                           placeholder="licenses"
+                                           id="licenses">
+                                    <select formControlName="licensesPeriod" *ngIf="periods.length > 0">
+                                        <option *ngFor="let period of periods" [ngValue]="period">{{period}}</option>
+                                    </select>
+                                </form>
+                            </td>
+                        </tr>
+
+
+                        <tr *ngFor="let resource of resources">
+                            <td><h2>{{resource.jobTitle}}</h2></td>
+                            <td>{{resource.basicSalary}}</td>
+                            <td>{{resource.resourceType}}</td>
+                            <td>{{resource.workload}}</td>
+                            <td>
+                                <img class="aspect-square action "
+                                     src="assets/images/duplicate.png"
+                                     alt="duplicate"
+                                     data-bs-toggle="tooltip"
+                                     data-bs-placement="top"
+                                     title="duplicate">
+                                <img class="aspect-square action"
+                                     src="assets/images/delete.png"
+                                     data-bs-target="#resourceDeleteModal"
+                                     (click)="onClickResourceToBeDeleted(resource)"
+                                     alt="delete"
+                                     data-bs-toggle="modal"
+                                     data-bs-placement="top"
+                                     title="delete">
+                            </td>
+                            <td>{{resource.allowance}}</td>
+                            <td>{{resource.gratuity}}</td>
+                            <td>{{resource.insurance}}</td>
+                            <td>{{resource.flightTicket}}</td>
+                            <td>{{resource.workPermit}}</td>
+                            <td>{{resource.office}}</td>
+                            <td>{{resource.generalSupportPackage}}</td>
+                            <td>{{resource.laptopWorkstation}}</td>
+                            <td>{{resource.licenses}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <form [formGroup]="displayForm" (ngSubmit)="onSubmitDisplay()" novalidate class="form-signin">
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="period">Period</label>
+                            <select formControlName="period" (change)="onChangePeriod()"
+                                    id="period" class="form-control">
+                                <option *ngFor="let period of periods"
+                                        [ngValue]="period">{{period}}</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label for="currency">Currency</label>
+                            <select formControlName="currency" (change)="onChangeCurrency()"
+                                    id="currency" class="form-control">
+                                <option *ngFor="let currency of currencies"
+                                        [ngValue]="currency">{{currency}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-block">
+                <div class="table-responsive scrollmenu m-3">
+                    <table class="table mb-0 new-patient-table table-hover">
+                        <thead>
+                        <tr>
+                            <th><h4>Costs</h4></th>
+                            <th *ngFor="let currency of displayCurrencies">{{currency}}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr *ngFor="let period of displayPeriods">
+                            <td><h2>{{period}}</h2></td>
+                            <td *ngFor="let currency of displayCurrencies">
+                                <h2>{{calculateCurrencyPeriodCost(currency, period)}}</h2></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row m-2">
+                    <div class="col">
+                        <form [formGroup]="projectForm" (ngSubmit)="onSubmitProject()" novalidate class="form-signin">
+                            <label for="margin">Margin (%)</label>
+                            <input type="number"
+                                   class="form-control"
+                                   formControlName="margin"
+                                   placeholder="margin"
+                                   id="margin">
+                        </form>
+                    </div>
+                    <div class="col">
+                        <form [formGroup]="projectForm" (ngSubmit)="onSubmitProject()" novalidate class="form-signin">
+                            <label for="riskProvision">Risk provision (%)</label>
+                            <input type="number"
+                                   class="form-control"
+                                   formControlName="riskProvision"
+                                   placeholder="Risk provision"
+                                   id="riskProvision">
+                        </form>
+                    </div>
+                </div>
+
+                <div class="table-responsive scrollmenu m-3">
+                    <table class="table mb-0 new-patient-table table-hover">
+                        <thead>
+                        <tr>
+                            <th><h4>Prices</h4></th>
+                            <th *ngFor="let currency of displayCurrencies">{{currency}}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr *ngFor="let period of displayPeriods">
+                            <td><h2>{{period}}</h2></td>
+                            <td *ngFor="let currency of displayCurrencies">
+                                <h2>{{calculateCurrencyPeriodPrice(currency, period)}}</h2></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal delete confirmation -->
+<div class="modal fade" id="resourceDeleteModal" tabindex="-1" aria-labelledby="resourceDeleteModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resourceDeleteModalLabel">Delete resource</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <b>Do you really want to delete this resource?</b>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        (click)="onClickDismissResource()">Close
+                </button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="onClickDeleteResource()">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

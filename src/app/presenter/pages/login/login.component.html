@@ -1,0 +1,54 @@
+<div class="main-wrapper account-wrapper">
+    <div class="account-page">
+        <div class="account-center">
+            <div class="account-box">
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                    <div class="account-logo">
+                        <a href=""><img src="assets/images/logo.png" alt=""></a>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginUsername">Email</label>
+
+                        <input type="email" class="form-control" formControlName="email" placeholder="Enter email"
+                               id="loginUsername">
+                        <small class="form-text text-muted"
+                               *ngIf="loginForm.controls['email'].touched && loginForm.controls['email'].errors?.['required']">
+                            Please enter email address.!
+                        </small>
+
+                        <small class="form-text text-muted"
+                               *ngIf="loginForm.controls['email'].touched && loginForm.controls['email'].errors?.['email']">
+                            Email address not well formed.!
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" class="form-control" formControlName="password"
+                               placeholder="Password"
+                               id="loginPassword">
+                    </div>
+                    <div class="form-group text-right">
+                        <a href="">Forgot your password?</a>
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary account-btn"
+                                [disabled]="!loginForm.valid" style="background-color: #042c44; color: #fcbc1f;">
+                            Login
+                        </button>
+                    </div>
+                    <div class="text-center register-link">
+                        Don’t have an account? <a href="">Register Now</a>
+                    </div>
+                    <div class="m-t-50">
+                        <img class=""
+                             width="50"
+                             src="assets/images/akkodis.png"
+                             alt="akkodis">
+                        <span style="font-size: xx-small;">Version : <b class="text-danger"> 0.1.0</b></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

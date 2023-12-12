@@ -1,0 +1,11 @@
+tr {
+    cursor: pointer;
+}
+
+tr img.action {
+    display: none;
+}
+
+tr:hover img.action {
+    display: inline-block;
+}

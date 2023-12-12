@@ -1,0 +1,166 @@
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title d-inline-block"><b
+                    *ngIf="projects">{{projects.length}}</b> Projects</h4>
+                <a href="" class="btn btn-outline-primary float-right" data-bs-toggle="modal"
+                   data-bs-target="#addProjectModal">Add</a>
+            </div>
+            <div class="card-block">
+                <div class="table-responsive">
+                    <table class="table mb-0 new-patient-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Title<span style="color: red;">*</span></th>
+                            <th>Client<span style="color: red;">*</span></th>
+                            <th>Duration (months)</th>
+                            <th>Description</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr>
+                            <td>
+                                <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <input type="text"
+                                           formControlName="title"
+                                           placeholder="Title of the project"
+                                           id="title">
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <input autocomplete="off"
+                                           autofocus=""
+                                           formControlName="client"
+                                           placeholder="Select client"
+                                           list="options"/>
+                                    <datalist id="options">
+                                        <option *ngFor="let client of clients" [value]="client.companyName">
+                                    </datalist>
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <input type="number"
+                                           formControlName="duration"
+                                           placeholder="Duration"
+                                           id="duration">
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+                                    <input type="text"
+                                           formControlName="description"
+                                           placeholder="Description"
+                                           id="description">
+                                </form>
+                            </td>
+                            <td>
+                                <img class="aspect-square" *ngIf="projectForm.valid" (click)="onSubmit()"
+                                     src="assets/images/check.png"
+                                     alt="check"
+                                     data-bs-toggle="tooltip"
+                                     data-bs-placement="top"
+                                     title="save">
+                            </td>
+                        </tr>
+
+                        <tr *ngFor="let project of projects" (click)="onClickAddResources(project)">
+                            <td (click)="onClickProject(project)"><h2>{{project.title}}</h2></td>
+                            <td (click)="onClickProject(project)">{{getClient(project.client!)?.companyName}}</td>
+                            <td (click)="onClickProject(project)">{{project.duration}}</td>
+                            <td (click)="onClickProject(project)">{{project.description}}</td>
+                            <td>
+                                <img class="aspect-square action "
+                                     src="assets/images/duplicate.png"
+                                     alt="duplicate"
+                                     data-bs-toggle="tooltip"
+                                     data-bs-placement="top"
+                                     title="duplicate">
+                                <img class="aspect-square action "
+                                     src="assets/images/delete.png"
+                                     alt="delete"
+                                     data-bs-toggle="tooltip"
+                                     data-bs-placement="top"
+                                     title="delete">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="addProjectModal" tabindex="-1" aria-labelledby="addProjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addProjectModalLabel">Add new project</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
+
+                <div class="modal-body row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="projectTitle">Title<span style="color: red;">*</span></label>
+                            <input type="text"
+                                   class="form-control"
+                                   formControlName="title"
+                                   placeholder="Title"
+                                   id="projectTitle">
+                            <small class="form-text text-muted text-danger"
+                                   *ngIf="projectForm.controls['title'].touched && projectForm.controls['title'].errors?.['required']">
+                                Please enter the title of the project.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <div class="form-group">
+                            <label for="projectClient">Client<span style="color: red;">*</span></label><br>
+                            <select formControlName="client" id="projectClient" class="form-control">
+                                <option value="" disabled>Select client</option>
+                                <option *ngFor="let client of clients" style="color: black;"
+                                        [ngValue]="client.id">{{client.companyName}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label for="projectDuration">Duration (months)</label>
+                            <input type="number"
+                                   class="form-control"
+                                   formControlName="duration"
+                                   placeholder="Duration"
+                                   id="projectDuration">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label for="projectDescription">Description</label>
+                        <textarea id="projectDescription" name="w3review"
+                                  formControlName="description"
+                                  rows="4" class="form-control"
+                                  placeholder="description of the project">
+                        </textarea>
+                    </div>
+                </div>
+
+            </form>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="!projectForm.valid"
+                        (click)="onSubmit()">Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

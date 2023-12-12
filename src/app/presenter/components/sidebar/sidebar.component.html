@@ -1,0 +1,32 @@
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li class="menu-title"></li>
+                <li class="pointer" [ngClass]="menu == 'dashboard' ? 'active' : ''">
+                    <a (click)="onClickMenu('dashboard')"><i class="fa fa-dashboard"></i>
+                        <span>Projects</span></a>
+                </li>
+                <li class="pointer" [ngClass]="menu == 'clients' ? 'active' : ''">
+                    <a (click)="onClickMenu('clients')"><i class="fa fa-user-md"></i> <span>Clients</span></a>
+                </li>
+                <li class="pointer" [ngClass]="menu == 'accounts' ? 'active' : ''">
+                    <a (click)="onClickMenu('accounts')"><i class="fa fa-users"></i> <span>Accounts</span></a>
+                </li>
+                <li class="pointer" [ngClass]="menu == 'settings' ? 'active' : ''">
+                    <a (click)="onClickMenu('settings')"><i class="fa fa-cog"></i> <span>Settings</span></a>
+                </li>
+                <li class="pointer" style="background-color: yellow">
+                    <a (click)="onClickSignOut()"><i class="fa fa-sign-out"></i> <span>Sign out</span></a>
+                </li>
+                <li class="pointer m-3">
+                    <img class=""
+                         width="50"
+                         src="assets/images/akkodis.png"
+                         alt="akkodis">
+                    <span style="font-size: xx-small;">Version : <b class="text-danger"> 0.1.0</b></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

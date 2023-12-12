@@ -1,0 +1,187 @@
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title d-inline-block"><b></b> Currencies </h4>
+                <a href="" class="btn btn-outline-primary float-right" data-bs-toggle="modal"
+                   data-bs-target="#addClientModal">Add</a>
+            </div>
+            <div class="card-block">
+                <div class="table-responsive">
+                    <table class="table mb-0 new-patient-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Currency 1<span style="color: red;">*</span></th>
+                            <th>Currency 2<span style="color: red;">*</span></th>
+                            <th>Rate<span style="color: red;">*</span></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <form [formGroup]="currencyForm" (ngSubmit)="onSubmitCurrency()" novalidate
+                                      class="form-signin">
+                                    <select formControlName="currency1" style="color: black;">
+                                        <option value="" disabled>Select currency</option>
+                                        <option *ngFor="let currency of currencies"
+                                                [ngValue]="currency">{{currency}}</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="currencyForm" (ngSubmit)="onSubmitCurrency()" novalidate
+                                      class="form-signin">
+                                    <select formControlName="currency2" style="color: black;">
+                                        <option value="" disabled>Select currency</option>
+                                        <option *ngFor="let currency of currencies"
+                                                [ngValue]="currency">{{currency}}</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>
+                                <form [formGroup]="currencyForm" (ngSubmit)="onSubmitCurrency()" novalidate
+                                      class="form-signin">
+                                    <input type="number"
+                                           formControlName="rate"
+                                           placeholder="Rate"
+                                           id="rate">
+                                </form>
+                            </td>
+                            <td>
+                                <img class="aspect-square" *ngIf="currencyForm.valid" (click)="onSubmitCurrency()"
+                                     src="assets/images/check.png"
+                                     alt="check"
+                                     data-bs-toggle="tooltip"
+                                     data-bs-placement="top"
+                                     title="save">
+                            </td>
+                        </tr>
+                        <tr *ngFor="let currency of currencyExchanges">
+                            <td>{{currency.currency1}}</td>
+                            <td>{{currency.currency2}}</td>
+                            <td>{{currency.rate}}</td>
+                            <td>
+                                <img class="aspect-square action "
+                                     src="assets/images/delete.png"
+                                     alt="delete"
+                                     data-bs-toggle="tooltip"
+                                     data-bs-placement="top"
+                                     title="delete">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title d-inline-block"><b></b> Billable working days :
+                    <b *ngIf="workingDaysResponse">{{calculateBillableWorkingDays()}}</b>
+                </h4>
+                <a href="" class="btn btn-outline-success float-right" (click)="onSubmitWorkingDays()">Save</a>
+            </div>
+            <div class="card-block">
+                <div class="table-responsive">
+                    <table class="table mb-0 new-patient-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Type of days</th>
+                            <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                Total calendar days
+                            </td>
+                            <td>
+                                <form [formGroup]="workingDaysForm" (ngSubmit)="onSubmitWorkingDays()" novalidate
+                                      class="form-signin">
+                                    <input type="number"
+                                           formControlName="totalCalendarDays"
+                                           placeholder="Total calendar days"
+                                           id="totalCalendarDays">
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Weekends
+                            </td>
+                            <td>
+                                <form [formGroup]="workingDaysForm" (ngSubmit)="onSubmitWorkingDays()" novalidate
+                                      class="form-signin">
+                                    <input type="number"
+                                           formControlName="weekends"
+                                           placeholder="Weekends"
+                                           id="weekends">
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Paid leave
+                            </td>
+                            <td>
+                                <form [formGroup]="workingDaysForm" (ngSubmit)="onSubmitWorkingDays()" novalidate
+                                      class="form-signin">
+                                    <input type="number"
+                                           formControlName="paidLeave"
+                                           placeholder="Paid leave"
+                                           id="paidLeave">
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Public holidays
+                            </td>
+                            <td>
+                                <form [formGroup]="workingDaysForm" (ngSubmit)="onSubmitWorkingDays()" novalidate
+                                      class="form-signin">
+                                    <input type="number"
+                                           formControlName="publicHolidays"
+                                           placeholder="Public holidays"
+                                           id="publicHolidays">
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title d-inline-block"><b></b> Languages</h4>
+                <a href="" class="btn btn-outline-success float-right">Save</a>
+            </div>
+            <div class="card-block m-3">
+                <form [formGroup]="languageForm" (ngSubmit)="onSubmitLanguage()" novalidate
+                      class="form-signin">
+                    <div class="form-group">
+                        <label for="language">Language</label>
+                        <select formControlName="language" id="language" class="form-control">
+                            <option value="" disabled>Select language</option>
+                            <option *ngFor="let language of languages" style="color: black;"
+                                    [ngValue]="language">{{language}}</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
