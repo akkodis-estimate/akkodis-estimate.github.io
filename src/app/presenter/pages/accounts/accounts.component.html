@@ -3,8 +3,9 @@
         <div class="card">
             <div class="card-header">
                 <h4 class="card-title d-inline-block"><b>{{accounts?.length}}</b> Accounts </h4>
-                <a href="" class="btn btn-outline-primary float-right" data-bs-toggle="modal"
-                   data-bs-target="#addClientModal">Add</a>
+                <button class="btn btn-outline-primary float-right"
+                        (click)="open(editAccountModal)">Add
+                </button>
             </div>
             <div class="card-block">
                 <div class="table-responsive">
@@ -18,6 +19,7 @@
                             <th></th>
                             <th>Phone number</th>
                             <th>Address</th>
+                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -55,7 +57,7 @@
                             </td>
                             <td>
                                 <img class="aspect-square" *ngIf="accountForm.valid" (click)="onSubmit()"
-                                     src="assets/images/check.png"
+                                     src="assets/images/save.png"
                                      alt="check"
                                      data-bs-toggle="tooltip"
                                      data-bs-placement="top"
@@ -75,11 +77,11 @@
                                            placeholder="Address">
                                 </form>
                             </td>
-
+                            <td></td>
                         </tr>
 
                         <tr *ngFor="let account of accounts">
-                            <td>
+                            <td (click)="openEditAccountModal(account, editAccountModal)">
                                 <div class="row">
                                     <div class="col-5 col-sm-5 col-md-4 col-lg-3 col-xl-3">
                                         <img width="28" height="28" class="rounded-circle m-r-5"
@@ -89,15 +91,21 @@
                                     <div class="col"><h2>{{account.firstname}}</h2></div>
                                 </div>
                             </td>
-                            <td>{{account.lastname}}</td>
-                            <td>{{account.email}}</td>
-                            <td>{{account.role}}</td>
-                            <td>{{account.phoneNumber}}</td>
-                            <td>{{account.address}}</td>
+                            <td (click)="openEditAccountModal(account, editAccountModal)">{{account.lastname}}</td>
+                            <td (click)="openEditAccountModal(account, editAccountModal)">{{account.email}}</td>
+                            <td (click)="openEditAccountModal(account, editAccountModal)">{{account.role}}</td>
+                            <td></td>
+                            <td (click)="openEditAccountModal(account, editAccountModal)">{{account.phoneNumber}}</td>
+                            <td (click)="openEditAccountModal(account, editAccountModal)">{{account.address}}</td>
                             <td>
                                 <img class="aspect-square action"
                                      src="assets/images/delete.png"
-                                     alt="delete">
+                                     data-bs-target="#accountDeleteModal"
+                                     (click)="onClickAccountToBeDeleted(account)"
+                                     alt="delete"
+                                     data-bs-toggle="modal"
+                                     data-bs-placement="top"
+                                     title="delete">
                             </td>
                         </tr>
                         </tbody>
@@ -108,90 +116,108 @@
     </div>
 </div>
 
+<ng-template #editAccountModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Edit account</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
 
-<!-- Modal -->
-<div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="addClientModalLabel">Add new account</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
-
-                <div class="modal-body row">
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="firstname">Firstname<span style="color: red;">*</span></label>
-                            <input type="text"
-                                   class="form-control"
-                                   formControlName="firstname"
-                                   placeholder="Firstname"
-                                   id="firstname">
-                            <small class="form-text text-muted text-danger"
-                                   *ngIf="accountForm.controls['firstname'].touched && accountForm.controls['firstname'].errors?.['required']">
-                                Please enter firstname!
-                            </small>
-                        </div>
-                        <div class="form-group">
-                            <label for="lastname">Lastname<span style="color: red;">*</span></label>
-                            <input type="text"
-                                   class="form-control"
-                                   formControlName="lastname"
-                                   placeholder="Lastname"
-                                   id="lastname">
-                            <small class="form-text text-muted text-danger"
-                                   *ngIf="accountForm.controls['lastname'].touched && accountForm.controls['lastname'].errors?.['required']">
-                                Please enter lastname!
-                            </small>
-                        </div>
-                        <div>
-                            <img src="assets/images/user.jpg">
-                        </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="firstname">Firstname<span style="color: red;">*</span></label>
+                        <input type="text"
+                               class="form-control"
+                               formControlName="firstname"
+                               placeholder="Firstname"
+                               id="firstname">
+                        <small class="form-text text-muted text-danger"
+                               *ngIf="accountForm.controls['firstname'].touched && accountForm.controls['firstname'].errors?.['required']">
+                            Please enter firstname!
+                        </small>
                     </div>
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="role">Role<span style="color: red;">*</span></label>
-                            <select formControlName="role" id="role" class="form-control">
-                                <option value="" disabled>Select role</option>
-                                <option *ngFor="let role of roles" style="color: black;"
-                                        [ngValue]="role">{{role}}</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email<span style="color: red;">*</span></label>
-                            <input type="email"
-                                   class="form-control"
-                                   formControlName="email"
-                                   placeholder="Email"
-                                   id="email">
-                        </div>
-                        <div class="form-group">
-                            <label for="phoneNumber">Phone number</label>
-                            <input type="tel"
-                                   class="form-control"
-                                   formControlName="phoneNumber"
-                                   placeholder="Phone number"
-                                   id="phoneNumber">
-                        </div>
-                        <div class="form-group">
-                            <label for="address">Address</label>
-                            <input type="tel"
-                                   class="form-control"
-                                   formControlName="address"
-                                   placeholder="Address"
-                                   id="address">
-                        </div>
+                    <div class="form-group">
+                        <label for="lastname">Lastname<span style="color: red;">*</span></label>
+                        <input type="text"
+                               class="form-control"
+                               formControlName="lastname"
+                               placeholder="Lastname"
+                               id="lastname">
+                        <small class="form-text text-muted text-danger"
+                               *ngIf="accountForm.controls['lastname'].touched && accountForm.controls['lastname'].errors?.['required']">
+                            Please enter lastname!
+                        </small>
+                    </div>
+                    <div>
+                        <img src="assets/images/user.jpg">
                     </div>
                 </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="role">Role<span style="color: red;">*</span></label>
+                        <select formControlName="role" id="role" class="form-control">
+                            <option value="" disabled>Select role</option>
+                            <option *ngFor="let role of roles" style="color: black;"
+                                    [ngValue]="role">{{role}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email<span style="color: red;">*</span></label>
+                        <input type="email"
+                               class="form-control"
+                               formControlName="email"
+                               placeholder="Email"
+                               id="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone number</label>
+                        <input type="tel"
+                               class="form-control"
+                               formControlName="phoneNumber"
+                               placeholder="Phone number"
+                               id="phoneNumber">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="tel"
+                               class="form-control"
+                               formControlName="address"
+                               placeholder="Address"
+                               id="address">
+                    </div>
+                </div>
+            </div>
 
-            </form>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="onClickEditAccountModalClose()">Close</button>
+        <button type="button" class="btn btn-primary" [disabled]="!accountForm.valid"
+                (click)="onSubmit()">Save
+        </button>
+    </div>
+</ng-template>
 
+<!-- Modal delete confirmation -->
+<div class="modal fade" id="accountDeleteModal" tabindex="-1" aria-labelledby="accountDeleteModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="accountDeleteModalLabel">Delete account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <b>Do you really want to delete this account?</b>
+            </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="!accountForm.valid"
-                        (click)="onSubmit()">Save
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        (click)="onClickDismiss()">Close
+                </button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="onClickDeleteAccount()">
+                    Confirm
                 </button>
             </div>
         </div>

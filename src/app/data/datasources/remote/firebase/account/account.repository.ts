@@ -34,20 +34,7 @@ export class AccountRepository extends IAccountRepository {
     }
 
     delete(id: string): Observable<void> {
-        let account: AccountEntity;
-        this.fetch(id).subscribe({
-            next: account => {
-                account.deleted = true;
-                return this.update(account.id!, account);
-            },
-            error: err => {
-                return of();
-            },
-            complete: () => {
-                return of();
-            }
-        });
-        return of();
+        return from(this.collection.doc(id).delete());
     }
 
     fetch(id: string): Observable<AccountEntity> {
@@ -58,9 +45,8 @@ export class AccountRepository extends IAccountRepository {
         return this.collection.valueChanges();
     }
 
-    update(id: string, account: AccountEntity): Observable<void> {
-        const docRef = this.firestore.doc(id);
-        return from(docRef.update(account));
+    update(id: string, entity: AccountEntity): Observable<void> {
+        return from(this.collection.doc(id).update(entity));
     }
 
     search(conditions: Condition[], options: Option[]): Observable<AccountEntity[]> {
