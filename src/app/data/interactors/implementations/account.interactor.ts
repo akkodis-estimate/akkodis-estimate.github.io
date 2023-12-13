@@ -70,7 +70,7 @@ export class AccountInteractor extends IAccountInteractor {
     }
 
     update(id: string, request: AccountRequest): Observable<Result<AccountResponse>> {
-        this.updateAccountUseCase.execute({id: id, request: request});
+        this.updateAccountUseCase.execute({id: id, request: this.mapper.fromRequest(request)});
         return of(this.mapper.toEmptyResponse());
     }
 

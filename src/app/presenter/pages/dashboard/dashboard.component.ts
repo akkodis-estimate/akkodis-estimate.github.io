@@ -72,8 +72,8 @@ export class DashboardComponent implements OnInit {
         return this.clients.find(client => client.id === id);
     }
 
-    getClientByCompanyName(companyName: string): ClientResponse | undefined {
-        return this.clients.find(client => client.companyName === companyName);
+    getClientById(id: string): ClientResponse | undefined {
+        return this.clients.find(client => client.id === id);
     }
 
     onSubmit() {
@@ -83,9 +83,12 @@ export class DashboardComponent implements OnInit {
                 duration: this.projectForm.value.duration,
                 description: this.projectForm.value.description,
                 client: this.projectForm.value.client,
-                margin: 18
+                margin: 18,
+                riskProvision: 0
             };
-            let clientResponse: ClientResponse | undefined = this.getClientByCompanyName(request.client!);
+            console.log(request);
+            let clientResponse: ClientResponse | undefined = this.getClientById(request.client!);
+            console.log(clientResponse);
             if (clientResponse) {
                 request.client = clientResponse.id;
                 this.saveProject(request);
@@ -145,5 +148,34 @@ export class DashboardComponent implements OnInit {
     onClickAddResources(project: ProjectResponse) {
         this.localStorageService.add(variables.project, project);
         this.router.navigate(['/resources']);
+    }
+
+    onClickProjectToBeDeleted(project: ProjectResponse) {
+        this.localStorageService.add(variables.project, project);
+    }
+
+    onClickDismiss() {
+        this.localStorageService.delete(variables.project);
+    }
+
+    onClickDeleteProject() {
+        let project = this.localStorageService.get(variables.project);
+        if (project && project.id) {
+            this.projectInteractor.delete(project.id!).subscribe({
+                next: value => {
+                    this.localStorageService.delete(variables.project);
+                    this.toastr.success("Project deleted successfully", "Delete project");
+                },
+                error: err => {
+                    this.localStorageService.delete(variables.project);
+                    this.toastr.error("Error occurred while deleting the project", "Delete project");
+                },
+                complete: () => {
+                }
+            });
+        } else {
+            this.localStorageService.delete(variables.project);
+            this.toastr.error("Project not found", "Delete project");
+        }
     }
 }

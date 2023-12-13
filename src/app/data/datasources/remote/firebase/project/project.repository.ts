@@ -25,7 +25,7 @@ export class ProjectRepository extends IProjectRepository {
     }
 
     delete(id: string): Observable<void> {
-        return of();
+        return from(this.collection.doc(id).delete());
     }
 
     fetch(id: string): Observable<ProjectEntity> {
@@ -37,8 +37,7 @@ export class ProjectRepository extends IProjectRepository {
     }
 
     update(id: string, entity: ProjectEntity): Observable<void> {
-        const docRef = this.firestore.doc(id);
-        return from(docRef.update(entity));
+        return from(this.collection.doc(id).update(entity));
     }
 
     search(conditions: Condition[], options: Option[]): Observable<ProjectEntity[]> {

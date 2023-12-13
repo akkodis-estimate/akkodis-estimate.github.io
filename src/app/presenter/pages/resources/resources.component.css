@@ -28,3 +28,7 @@ table, th, td {
     border: 1px solid lightgray;
     border-collapse: collapse;
 }
+
+.divider-left {
+    border-right: 1px dashed #333;
+}

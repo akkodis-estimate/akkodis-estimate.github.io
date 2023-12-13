@@ -37,8 +37,7 @@ export class WorkingDaysRepository extends IWorkingDaysRepository {
     }
 
     update(id: string, entity: ProjectEntity): Observable<void> {
-        const docRef = this.firestore.doc(id);
-        return from(docRef.update(entity));
+        return from(this.collection.doc(id).update(entity));
     }
 
     search(conditions: Condition[], options: Option[]): Observable<WorkingDaysEntity[]> {
