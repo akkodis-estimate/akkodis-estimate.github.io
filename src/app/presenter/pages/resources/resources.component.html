@@ -75,10 +75,10 @@
                             <th>Workload</th>
                             <th>Actions</th>
                             <th>Allowance</th>
-                            <th>Gratuity</th>
+                            <th>Gratuity / End of service</th>
                             <th>Insurance</th>
-                            <th>Flight ticket</th>
-                            <th>Work permit</th>
+                            <th>Annual flight ticket</th>
+                            <th>VISA / Work Permit</th>
                             <th>Office</th>
                             <th>General support package</th>
                             <th>Laptop workstation</th>
@@ -398,7 +398,17 @@
                         <tr *ngFor="let period of displayPeriods">
                             <td><h2>{{period}}</h2></td>
                             <td *ngFor="let currency of displayCurrencies">
-                                <h2>{{calculateCurrencyPeriodPrice(currency, period) | amount}}</h2></td>
+                                <h2>
+                                    {{calculateCurrencyPeriodPrice(currency, period) | amount}}
+                                </h2>
+                                <div [formGroup]="pricesForm">
+                                    <input type="number"
+                                           class="form-control"
+                                           (change)="onChangePrice(period, currency, $event)"
+                                           formControlName="amount"
+                                           placeholder="{{calculateCurrencyPeriodPrice(currency, period)}}">
+                                </div>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -527,7 +537,7 @@
                         </div>
                     </div>
                     <div class="row form-group">
-                        <label for="resourceGratuity">Gratuity</label>
+                        <label for="resourceGratuity">Gratuity / End of service</label>
                         <div class="col-3">
                             <select formControlName="gratuityCurrency"
                                     class="form-control">
@@ -540,7 +550,7 @@
                             <input type="number"
                                    class="form-control"
                                    formControlName="gratuity"
-                                   placeholder="Gratuity"
+                                   placeholder="Gratuity / End of service"
                                    id="resourceGratuity">
                         </div>
                         <div class="col-4">

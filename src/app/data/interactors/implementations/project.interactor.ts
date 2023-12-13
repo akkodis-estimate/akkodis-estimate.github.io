@@ -19,6 +19,9 @@ import {
 import {
     UpdateProjectUseCase
 } from "../../../domain/usecases/project-usecases/update-project-usecase/update-project.usecase";
+import {
+    FetchProjectUseCase
+} from "../../../domain/usecases/project-usecases/fetch-project-usecase/fetch-project.usecase";
 
 @Injectable({providedIn: 'root'})
 export class ProjectInteractor extends IProjectInteractor {
@@ -28,6 +31,7 @@ export class ProjectInteractor extends IProjectInteractor {
     constructor(private createProjectUseCase: CreateProjectUseCase,
                 private deleteProjectUseCase: DeleteProjectUseCase,
                 private updateProjectUseCase: UpdateProjectUseCase,
+                private fetchProjectUseCase: FetchProjectUseCase,
                 private fetchProjectsUseCase: FetchProjectsUseCase) {
         super();
     }
@@ -51,7 +55,8 @@ export class ProjectInteractor extends IProjectInteractor {
     }
 
     fetchOne(id: string): Observable<Result<ProjectResponse>> {
-        return of();
+        return this.fetchProjectUseCase.execute(id)
+            .pipe(map((e: ProjectEntity | undefined) => this.mapper.toResponse(e)));
     }
 
     update(id: string, request: ProjectRequest): Observable<Result<ProjectResponse>> {

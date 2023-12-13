@@ -9,7 +9,7 @@ export abstract class BaseRepository<T> {
 
     abstract fetchAll(): Observable<T[]>;
 
-    abstract fetch(id: string): Observable<T>;
+    abstract fetch(id: string): Observable<T | undefined>;
 
     abstract delete(id: string): Observable<void>;
 
