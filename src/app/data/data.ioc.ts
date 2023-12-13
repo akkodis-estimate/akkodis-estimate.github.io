@@ -56,6 +56,7 @@ import {
 import {
     UpdateResourceUseCase
 } from "../domain/usecases/resource-usecases/update-resource-usecase/update-resource.usecase";
+import {FetchProjectUseCase} from "../domain/usecases/project-usecases/fetch-project-usecase/fetch-project.usecase";
 
 export const DATA_ACCOUNT_IOC: Provider[] = [
     {
@@ -150,6 +151,11 @@ export const DATA_PROJECT_IOC: Provider[] = [
         deps: [ProjectRepository],
         provide: FetchProjectsUseCase,
         useFactory: (repository: ProjectRepository) => new FetchProjectsUseCase(repository),
+    },
+    {
+        deps: [ProjectRepository],
+        provide: FetchProjectUseCase,
+        useFactory: (repository: ProjectRepository) => new FetchProjectUseCase(repository),
     },
     {
         deps: [ProjectRepository],

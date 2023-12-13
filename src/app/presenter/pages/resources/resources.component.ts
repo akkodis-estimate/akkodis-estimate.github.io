@@ -36,6 +36,7 @@ export class ResourcesComponent implements OnInit {
     resourceForm: FormGroup;
     projectForm: FormGroup;
     displayForm: FormGroup;
+    pricesForm: FormGroup;
     closeResult = '';
     private editResourceModalReference!: NgbModalRef;
     selectedResource!: ResourceResponse | undefined;
@@ -70,17 +71,17 @@ export class ResourcesComponent implements OnInit {
             period: new FormControl(PeriodEnum.Annually),
             currency: new FormControl(CurrencyEnum.AED),
         });
+
+        this.pricesForm = new FormGroup({
+            period: new FormControl(""),
+            currency: new FormControl(""),
+            amount: new FormControl(""),
+        });
     }
 
     ngOnInit(): void {
         this.fetchClients();
         this.fetchResources(this.project.id!);
-        const options = {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        };
-        console.log(Number(1256348.25697831).toLocaleString('en', options));
-
     }
 
     initResourceForm(resource?: ResourceResponse): FormGroup {
@@ -376,6 +377,7 @@ export class ResourcesComponent implements OnInit {
             next: response => {
                 if (response && response.success) {
                     this.project = response.data!;
+                    this.localStorageService.update(variables.project, this.project);
                 }
             },
             error: err => {
@@ -486,6 +488,20 @@ export class ResourcesComponent implements OnInit {
         this.selectedResource = resource;
         this.resourceForm = this.initResourceForm(this.selectedResource);
         this.open(content);
+    }
+
+    onSubmitPrices() {
+
+    }
+
+    onChangePrice(period: PeriodEnum, currency: CurrencyEnum, amount: any) {
+        console.log(period);
+        console.log(currency);
+        console.log(amount.target.value);
+    }
+
+    calculateMargin() {
+
     }
 }
 

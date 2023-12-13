@@ -28,8 +28,8 @@ export class ProjectRepository extends IProjectRepository {
         return from(this.collection.doc(id).delete());
     }
 
-    fetch(id: string): Observable<ProjectEntity> {
-        return of();
+    fetch(id: string): Observable<ProjectEntity | undefined> {
+        return this.collection.doc(id).valueChanges()
     }
 
     fetchAll(): Observable<ProjectEntity[]> {

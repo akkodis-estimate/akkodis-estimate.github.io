@@ -61,7 +61,7 @@ export class AccountInteractor extends IAccountInteractor {
 
     fetchOne(id: string): Observable<Result<AccountResponse>> {
         return this.fetchAccountUseCase.execute(id)
-            .pipe(map((account: AccountEntity) => this.mapper.toResponse(account)));
+            .pipe(map((account: AccountEntity | undefined) => this.mapper.toResponse(account)));
     }
 
     login(request: { username: string; password: string }): Observable<Result<AccountResponse>> {
