@@ -16,6 +16,12 @@ import {ResourceEntity} from "../../../domain/entities/resource.entity";
 import {
     FetchProjectResourcesUseCase
 } from "../../../domain/usecases/resource-usecases/fetch-project-resources.usecase/fetch-project-resources.usecase";
+import {
+    DeleteResourceUseCase
+} from "../../../domain/usecases/resource-usecases/delete-resource-usecase/delete-resource.usecase";
+import {
+    UpdateResourceUseCase
+} from "../../../domain/usecases/resource-usecases/update-resource-usecase/update-resource.usecase";
 
 @Injectable({providedIn: 'root'})
 export class ResourceInteractor extends IResourceInteractor {
@@ -23,22 +29,23 @@ export class ResourceInteractor extends IResourceInteractor {
 
     constructor(private createResourceUseCase: CreateResourceUseCase,
                 private fetchProjectResourcesUseCase: FetchProjectResourcesUseCase,
+                private deleteResourceUseCase: DeleteResourceUseCase,
+                private updateResourceUseCase: UpdateResourceUseCase,
                 private fetchResourcesUseCase: FetchResourcesUseCase) {
         super();
     }
 
     create(request: ResourceRequest): Observable<Result<ResourceResponse>> {
-
         let entity: ResourceEntity = this.mapper.fromRequest(request);
         entity.id = uuidv4();
         entity.createdAt = new Date();
-
         return this.createResourceUseCase.execute(entity)
             .pipe(map((e: ResourceEntity) => this.mapper.toResponse(e)));
     }
 
     delete(id: string): Observable<Result<ResourceResponse>> {
-        return of();
+        this.deleteResourceUseCase.execute(id);
+        return of(this.mapper.toEmptyResponse());
     }
 
     fetchAll(): Observable<Result<ResourceResponse[]>> {
@@ -56,7 +63,8 @@ export class ResourceInteractor extends IResourceInteractor {
     }
 
     update(id: string, request: ResourceRequest): Observable<Result<ResourceResponse>> {
-        return of();
+        this.updateResourceUseCase.execute({id: id, request: this.mapper.fromRequest(request)});
+        return of(this.mapper.toEmptyResponse());
     }
 
 }

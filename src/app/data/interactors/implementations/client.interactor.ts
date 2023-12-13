@@ -56,7 +56,7 @@ export class ClientInteractor extends IClientInteractor {
     }
 
     update(id: string, request: ClientRequest): Observable<Result<ClientResponse>> {
-        this.updateClientUseCase.execute({id: id, request: request});
+        this.updateClientUseCase.execute({id: id, request: this.mapper.fromRequest(request)});
         return of(this.mapper.toEmptyResponse());
     }
 }
