@@ -46,6 +46,17 @@ import {
 } from "../domain/usecases/resource-usecases/fetch-project-resources.usecase/fetch-project-resources.usecase";
 import {DeleteClientUseCase} from "../domain/usecases/client-usescases/delete-client-usecase/delete-client.usecase";
 import {UpdateClientUseCase} from "../domain/usecases/client-usescases/update-client-usecase/update-client.usecase";
+import {DeleteAccountUseCase} from "../domain/usecases/account-usescases/delete-account-usecase/delete-account.usecase";
+import {UpdateAccountUseCase} from "../domain/usecases/account-usescases/update-account-usecase/update-account.usecase";
+import {DeleteProjectUseCase} from "../domain/usecases/project-usecases/delete-project-usecase/delete-project.usecase";
+import {UpdateProjectUseCase} from "../domain/usecases/project-usecases/update-project-usecase/update-project.usecase";
+import {
+    DeleteResourceUseCase
+} from "../domain/usecases/resource-usecases/delete-resource-usecase/delete-resource.usecase";
+import {
+    UpdateResourceUseCase
+} from "../domain/usecases/resource-usecases/update-resource-usecase/update-resource.usecase";
+import {FetchProjectUseCase} from "../domain/usecases/project-usecases/fetch-project-usecase/fetch-project.usecase";
 
 export const DATA_ACCOUNT_IOC: Provider[] = [
     {
@@ -76,6 +87,16 @@ export const DATA_ACCOUNT_IOC: Provider[] = [
         deps: [AccountRepository],
         provide: FetchAccountsUseCase,
         useFactory: (repository: AccountRepository) => new FetchAccountsUseCase(repository),
+    },
+    {
+        deps: [AccountRepository],
+        provide: DeleteAccountUseCase,
+        useFactory: (repository: AccountRepository) => new DeleteAccountUseCase(repository),
+    },
+    {
+        deps: [AccountRepository],
+        provide: UpdateAccountUseCase,
+        useFactory: (repository: AccountRepository) => new UpdateAccountUseCase(repository),
     },
 ];
 
@@ -130,6 +151,21 @@ export const DATA_PROJECT_IOC: Provider[] = [
         deps: [ProjectRepository],
         provide: FetchProjectsUseCase,
         useFactory: (repository: ProjectRepository) => new FetchProjectsUseCase(repository),
+    },
+    {
+        deps: [ProjectRepository],
+        provide: FetchProjectUseCase,
+        useFactory: (repository: ProjectRepository) => new FetchProjectUseCase(repository),
+    },
+    {
+        deps: [ProjectRepository],
+        provide: DeleteProjectUseCase,
+        useFactory: (repository: ProjectRepository) => new DeleteProjectUseCase(repository),
+    },
+    {
+        deps: [ProjectRepository],
+        provide: UpdateProjectUseCase,
+        useFactory: (repository: ProjectRepository) => new UpdateProjectUseCase(repository),
     }
 ];
 
@@ -157,6 +193,16 @@ export const DATA_RESOURCE_IOC: Provider[] = [
         deps: [ResourceRepository],
         provide: FetchProjectResourcesUseCase,
         useFactory: (repository: ResourceRepository) => new FetchProjectResourcesUseCase(repository),
+    },
+    {
+        deps: [ResourceRepository],
+        provide: DeleteResourceUseCase,
+        useFactory: (repository: ResourceRepository) => new DeleteResourceUseCase(repository),
+    },
+    {
+        deps: [ResourceRepository],
+        provide: UpdateResourceUseCase,
+        useFactory: (repository: ResourceRepository) => new UpdateResourceUseCase(repository),
     }
 ];
 

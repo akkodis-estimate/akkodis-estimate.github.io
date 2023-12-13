@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {ProjectResponse} from "../../../data/responses/project.response";
 import {LocalStorageService} from "../../services/local-storage/local-storage.service";
 import {variables} from "../../../../environments/variables";
@@ -15,6 +15,7 @@ import {ClientInteractor} from "../../../data/interactors/implementations/client
 import {ProjectRequest} from "../../../data/requests/project.request";
 import {ProjectInteractor} from "../../../data/interactors/implementations/project.interactor";
 import {Router} from "@angular/router";
+import {ModalDismissReasons, NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: 'app-resources',
@@ -35,10 +36,15 @@ export class ResourcesComponent implements OnInit {
     resourceForm: FormGroup;
     projectForm: FormGroup;
     displayForm: FormGroup;
+    pricesForm: FormGroup;
+    closeResult = '';
+    private editResourceModalReference!: NgbModalRef;
+    selectedResource!: ResourceResponse | undefined;
 
     constructor(private localStorageService: LocalStorageService,
                 private toastr: ToastrService,
                 private router: Router,
+                private modalService: NgbModal,
                 private clientInteractor: ClientInteractor,
                 private projectInteractor: ProjectInteractor,
                 private resourceInteractor: ResourceInteractor) {
@@ -50,41 +56,7 @@ export class ResourcesComponent implements OnInit {
         this.displayCurrencies.push(CurrencyEnum.AED);
         this.displayPeriods.push(PeriodEnum.Annually);
 
-        this.resourceForm = new FormGroup({
-            jobTitle: new FormControl('', [Validators.required]),
-            basicSalaryPeriod: new FormControl('MONTHLY'),
-            basicSalaryCurrency: new FormControl('AED'),
-            basicSalary: new FormControl('', [Validators.required]),
-            resourceType: new FormControl('', [Validators.required]),
-            workload: new FormControl('1'),
-            allowancePeriod: new FormControl('MONTHLY'),
-            allowanceCurrency: new FormControl('AED'),
-            allowance: new FormControl(''),
-            gratuityPeriod: new FormControl('ANNUALLY'),
-            gratuityCurrency: new FormControl('AED'),
-            gratuity: new FormControl(''),
-            insurancePeriod: new FormControl('ANNUALLY'),
-            insuranceCurrency: new FormControl('AED'),
-            insurance: new FormControl('790'),
-            flightTicketPeriod: new FormControl('ANNUALLY'),
-            flightTicketCurrency: new FormControl('AED'),
-            flightTicket: new FormControl('2500'),
-            workPermitPeriod: new FormControl('ANNUALLY'),
-            workPermitCurrency: new FormControl('AED'),
-            workPermit: new FormControl('6500'),
-            officePeriod: new FormControl('DAILY'),
-            officeCurrency: new FormControl('AED'),
-            office: new FormControl('19'),
-            generalSupportPackagePeriod: new FormControl('DAILY'),
-            generalSupportPackageCurrency: new FormControl('AED'),
-            generalSupportPackage: new FormControl('15'),
-            laptopWorkstationPeriod: new FormControl('ANNUALLY'),
-            laptopWorkstationCurrency: new FormControl('AED'),
-            laptopWorkstation: new FormControl('5000'),
-            licensesPeriod: new FormControl('ANNUALLY'),
-            licensesCurrency: new FormControl('AED'),
-            licenses: new FormControl('400'),
-        });
+        this.resourceForm = this.initResourceForm();
 
         this.projectForm = new FormGroup({
             title: new FormControl(this.project.title, [Validators.required]),
@@ -99,17 +71,66 @@ export class ResourcesComponent implements OnInit {
             period: new FormControl(PeriodEnum.Annually),
             currency: new FormControl(CurrencyEnum.AED),
         });
+
+        this.pricesForm = new FormGroup({
+            period: new FormControl(""),
+            currency: new FormControl(""),
+            amount: new FormControl(""),
+        });
     }
 
     ngOnInit(): void {
         this.fetchClients();
         this.fetchResources(this.project.id!);
-        const options = {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        };
-        console.log(Number(1256348.25697831).toLocaleString('en', options));
+    }
 
+    initResourceForm(resource?: ResourceResponse): FormGroup {
+        resource = resource == undefined ? {} : resource;
+        return new FormGroup({
+            jobTitle: new FormControl(resource.jobTitle ? resource.jobTitle : "", [Validators.required]),
+            resourceType: new FormControl(resource.resourceType ? resource.resourceType : "", [Validators.required]),
+            workload: new FormControl(resource && resource.workload ? resource.workload : ""),
+
+            basicSalaryPeriod: new FormControl(resource.basicSalary ? this.getPeriod(resource.basicSalary) : 'MONTHLY'),
+            basicSalaryCurrency: new FormControl(resource.basicSalary ? this.getCurrency(resource.basicSalary) : 'AED'),
+            basicSalary: new FormControl(this.getAmount(resource.basicSalary!), [Validators.required]),
+
+            allowancePeriod: new FormControl(resource.allowance ? this.getPeriod(resource.allowance) : 'MONTHLY'),
+            allowanceCurrency: new FormControl(this.getCurrency(resource.allowance!)),
+            allowance: new FormControl(this.getAmount(resource.allowance!)),
+
+            gratuityPeriod: new FormControl(resource.gratuity ? this.getPeriod(resource.gratuity) : 'ANNUALLY'),
+            gratuityCurrency: new FormControl(this.getCurrency(resource.gratuity!)),
+            gratuity: new FormControl(this.getAmount(resource.gratuity!)),
+
+            insurancePeriod: new FormControl(resource.insurance ? this.getPeriod(resource.insurance) : 'ANNUALLY'),
+            insuranceCurrency: new FormControl(this.getCurrency(resource.insurance!)),
+            insurance: new FormControl(resource.insurance ? this.getAmount(resource.insurance) : '790'),
+
+            flightTicketPeriod: new FormControl(resource.flightTicket ? this.getPeriod(resource.flightTicket) : 'ANNUALLY'),
+            flightTicketCurrency: new FormControl(this.getCurrency(resource.flightTicket!)),
+            flightTicket: new FormControl(resource.flightTicket ? this.getAmount(resource.flightTicket) : '2500'),
+
+            workPermitPeriod: new FormControl(resource.workPermit ? this.getPeriod(resource.workPermit) : 'ANNUALLY'),
+            workPermitCurrency: new FormControl(this.getCurrency(resource.workPermit!)),
+            workPermit: new FormControl(resource.workPermit ? this.getAmount(resource.workPermit) : '6500'),
+
+            officePeriod: new FormControl(resource.office ? this.getPeriod(resource.office) : 'DAILY'),
+            officeCurrency: new FormControl(this.getCurrency(resource.office!)),
+            office: new FormControl(resource.office ? this.getAmount(resource.office) : '19'),
+
+            generalSupportPackagePeriod: new FormControl(resource.generalSupportPackage ? this.getPeriod(resource.generalSupportPackage) : 'DAILY'),
+            generalSupportPackageCurrency: new FormControl(this.getCurrency(resource.generalSupportPackage!)),
+            generalSupportPackage: new FormControl(resource.generalSupportPackage ? this.getAmount(resource.generalSupportPackage) : '15'),
+
+            laptopWorkstationPeriod: new FormControl(resource.laptopWorkstation ? this.getPeriod(resource.laptopWorkstation) : 'ANNUALLY'),
+            laptopWorkstationCurrency: new FormControl(this.getCurrency(resource.laptopWorkstation!)),
+            laptopWorkstation: new FormControl(resource.laptopWorkstation ? this.getAmount(resource.laptopWorkstation) : '5000'),
+
+            licensesPeriod: new FormControl(resource.licenses ? this.getPeriod(resource.licenses) : 'ANNUALLY'),
+            licensesCurrency: new FormControl(this.getCurrency(resource.licenses!)),
+            licenses: new FormControl(resource.licenses ? this.getAmount(resource.licenses) : '400'),
+        });
     }
 
     fetchClients() {
@@ -142,6 +163,18 @@ export class ResourcesComponent implements OnInit {
 
     splitAmount(amount: string): string[] {
         return amount.split(" ");
+    }
+
+    getAmount(amount: string): string {
+        return amount ? this.splitAmount(amount)[2] : "";
+    }
+
+    getCurrency(amount: string): string {
+        return amount ? this.splitAmount(amount)[1] : CurrencyEnum.AED;
+    }
+
+    getPeriod(amount: string): string {
+        return amount ? this.splitAmount(amount)[0] : PeriodEnum.Annually;
     }
 
     calculateAttributeAnnualCost(attribute: string): number {
@@ -219,33 +252,57 @@ export class ResourcesComponent implements OnInit {
     }
 
     onSubmit() {
-        let request: ResourceRequest = {
-            jobTitle: this.resourceForm.value.jobTitle,
-            resourceType: this.resourceForm.value.resourceType,
-            workload: this.resourceForm.value.workload,
-            project: this.project.id,
-            basicSalary: this.resourceForm.value.basicSalaryPeriod + " " + this.resourceForm.value.basicSalaryCurrency + " " + this.resourceForm.value.basicSalary,
-            allowance: this.resourceForm.value.allowancePeriod + " " + this.resourceForm.value.allowanceCurrency + " " + this.resourceForm.value.allowance,
-            gratuity: this.resourceForm.value.gratuityPeriod + " " + this.resourceForm.value.gratuityCurrency + " " + this.resourceForm.value.gratuity,
-            insurance: this.resourceForm.value.insurancePeriod + " " + this.resourceForm.value.insuranceCurrency + " " + this.resourceForm.value.insurance,
-            flightTicket: this.resourceForm.value.flightTicketPeriod + " " + this.resourceForm.value.flightTicketCurrency + " " + this.resourceForm.value.flightTicket,
-            workPermit: this.resourceForm.value.workPermitPeriod + " " + this.resourceForm.value.workPermitCurrency + " " + this.resourceForm.value.workPermit,
-            office: this.resourceForm.value.officePeriod + " " + this.resourceForm.value.officeCurrency + " " + this.resourceForm.value.office,
-            generalSupportPackage: this.resourceForm.value.generalSupportPackagePeriod + " " + this.resourceForm.value.generalSupportPackageCurrency + " " + this.resourceForm.value.generalSupportPackage,
-            laptopWorkstation: this.resourceForm.value.laptopWorkstationPeriod + " " + this.resourceForm.value.laptopWorkstationCurrency + " " + this.resourceForm.value.laptopWorkstation,
-            licenses: this.resourceForm.value.licensesPeriod + " " + this.resourceForm.value.licensesCurrency + " " + this.resourceForm.value.licenses,
-        };
-        this.resourceInteractor.create(request).subscribe({
-            next: value => {
-                this.toastr.success('project successfully saved', 'Success');
-                this.fetchResources(this.project.id!);
-            },
-            error: err => {
-                this.toastr.error('Error occurred while saving the project', 'Error');
-            },
-            complete: () => {
+        if (this.resourceForm.valid) {
+            let request: ResourceRequest = {
+                jobTitle: this.resourceForm.value.jobTitle,
+                resourceType: this.resourceForm.value.resourceType,
+                workload: this.resourceForm.value.workload,
+                project: this.project.id,
+                basicSalary: this.resourceForm.value.basicSalaryPeriod + " " + this.resourceForm.value.basicSalaryCurrency + " " + this.resourceForm.value.basicSalary,
+                allowance: this.resourceForm.value.allowancePeriod + " " + this.resourceForm.value.allowanceCurrency + " " + this.resourceForm.value.allowance,
+                gratuity: this.resourceForm.value.gratuityPeriod + " " + this.resourceForm.value.gratuityCurrency + " " + this.resourceForm.value.gratuity,
+                insurance: this.resourceForm.value.insurancePeriod + " " + this.resourceForm.value.insuranceCurrency + " " + this.resourceForm.value.insurance,
+                flightTicket: this.resourceForm.value.flightTicketPeriod + " " + this.resourceForm.value.flightTicketCurrency + " " + this.resourceForm.value.flightTicket,
+                workPermit: this.resourceForm.value.workPermitPeriod + " " + this.resourceForm.value.workPermitCurrency + " " + this.resourceForm.value.workPermit,
+                office: this.resourceForm.value.officePeriod + " " + this.resourceForm.value.officeCurrency + " " + this.resourceForm.value.office,
+                generalSupportPackage: this.resourceForm.value.generalSupportPackagePeriod + " " + this.resourceForm.value.generalSupportPackageCurrency + " " + this.resourceForm.value.generalSupportPackage,
+                laptopWorkstation: this.resourceForm.value.laptopWorkstationPeriod + " " + this.resourceForm.value.laptopWorkstationCurrency + " " + this.resourceForm.value.laptopWorkstation,
+                licenses: this.resourceForm.value.licensesPeriod + " " + this.resourceForm.value.licensesCurrency + " " + this.resourceForm.value.licenses,
+            };
+
+            if (this.selectedResource && this.selectedResource.id) {
+                this.resourceInteractor.update(this.selectedResource.id!, request).subscribe({
+                    next: value => {
+                        this.selectedResource = undefined;
+                        this.resourceForm.reset();
+                        this.editResourceModalReference.dismiss();
+                        this.toastr.success('resource successfully updated', 'Update resource');
+                        this.fetchResources(this.project.id!);
+                    },
+                    error: err => {
+                        this.toastr.error('Error occurred while updating the client', 'Update client');
+                    },
+                    complete: () => {
+                    }
+                });
+            } else {
+                this.resourceInteractor.create(request).subscribe({
+                    next: value => {
+                        this.resourceForm.reset();
+                        this.editResourceModalReference.dismiss();
+                        this.toastr.success('resource successfully saved', 'Add resource');
+                        this.fetchResources(this.project.id!);
+                    },
+                    error: err => {
+                        this.toastr.error('Error occurred while saving the resource', 'Add resource');
+                    },
+                    complete: () => {
+                    }
+                });
             }
-        });
+        } else {
+            this.toastr.error('Some inputs are incorrect', 'Edit resource');
+        }
     }
 
     onChangeBasicSalary() {
@@ -320,6 +377,7 @@ export class ResourcesComponent implements OnInit {
             next: response => {
                 if (response && response.success) {
                     this.project = response.data!;
+                    this.localStorageService.update(variables.project, this.project);
                 }
             },
             error: err => {
@@ -339,7 +397,6 @@ export class ResourcesComponent implements OnInit {
                 margin: this.projectForm.value.margin,
                 riskProvision: this.projectForm.value.riskProvision,
             };
-            console.log(request);
             this.projectInteractor.update(this.project.id!, request).subscribe({
                 next: value => {
                     this.fetchProject();
@@ -368,7 +425,24 @@ export class ResourcesComponent implements OnInit {
     }
 
     onClickDeleteResource() {
-        console.log(this.localStorageService.get(variables.resource));
+        let resource = this.localStorageService.get(variables.resource);
+        if (resource && resource.id) {
+            this.resourceInteractor.delete(resource.id!).subscribe({
+                next: value => {
+                    this.localStorageService.delete(variables.resource);
+                    this.toastr.success("Resource deleted successfully", "Delete resource");
+                },
+                error: err => {
+                    this.localStorageService.delete(variables.resource);
+                    this.toastr.error("Error occurred while deleting the resource", "Delete resource");
+                },
+                complete: () => {
+                }
+            });
+        } else {
+            this.localStorageService.delete(variables.resource);
+            this.toastr.error("Resource not found", "Delete resource");
+        }
     }
 
     onClickResourceToBeDeleted(resource: ResourceResponse) {
@@ -377,6 +451,57 @@ export class ResourcesComponent implements OnInit {
 
     onClickDismissResource() {
         this.localStorageService.delete(variables.resource);
+    }
+
+    onClickEditResourceModalClose() {
+        this.resourceForm = this.initResourceForm();
+        this.editResourceModalReference.dismiss();
+    }
+
+    open(content: TemplateRef<any>) {
+        this.editResourceModalReference = this.modalService.open(content, {
+            ariaLabelledBy: 'modal-basic-title',
+            size: 'xl'
+        });
+        this.editResourceModalReference.result.then(
+            (result) => {
+                this.closeResult = `Closed with: ${result}`;
+            },
+            (reason) => {
+                this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+            },
+        );
+    }
+
+    private getDismissReason(reason: any): string {
+        switch (reason) {
+            case ModalDismissReasons.ESC:
+                return 'by pressing ESC';
+            case ModalDismissReasons.BACKDROP_CLICK:
+                return 'by clicking on a backdrop';
+            default:
+                return `with: ${reason}`;
+        }
+    }
+
+    openEditResourceModal(resource: ResourceResponse, content: TemplateRef<any>) {
+        this.selectedResource = resource;
+        this.resourceForm = this.initResourceForm(this.selectedResource);
+        this.open(content);
+    }
+
+    onSubmitPrices() {
+
+    }
+
+    onChangePrice(period: PeriodEnum, currency: CurrencyEnum, amount: any) {
+        console.log(period);
+        console.log(currency);
+        console.log(amount.target.value);
+    }
+
+    calculateMargin() {
+
     }
 }
 

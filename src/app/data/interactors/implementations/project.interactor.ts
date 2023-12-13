@@ -13,6 +13,15 @@ import {
 import {
     FetchProjectsUseCase
 } from "../../../domain/usecases/project-usecases/fetch-projects-usecase/fetch-projects.usecase";
+import {
+    DeleteProjectUseCase
+} from "../../../domain/usecases/project-usecases/delete-project-usecase/delete-project.usecase";
+import {
+    UpdateProjectUseCase
+} from "../../../domain/usecases/project-usecases/update-project-usecase/update-project.usecase";
+import {
+    FetchProjectUseCase
+} from "../../../domain/usecases/project-usecases/fetch-project-usecase/fetch-project.usecase";
 
 @Injectable({providedIn: 'root'})
 export class ProjectInteractor extends IProjectInteractor {
@@ -20,22 +29,24 @@ export class ProjectInteractor extends IProjectInteractor {
     mapper = new ProjectMapper();
 
     constructor(private createProjectUseCase: CreateProjectUseCase,
+                private deleteProjectUseCase: DeleteProjectUseCase,
+                private updateProjectUseCase: UpdateProjectUseCase,
+                private fetchProjectUseCase: FetchProjectUseCase,
                 private fetchProjectsUseCase: FetchProjectsUseCase) {
         super();
     }
 
     create(request: ProjectRequest): Observable<Result<ProjectResponse>> {
-
         let entity: ProjectEntity = this.mapper.fromRequest(request);
         entity.id = uuidv4();
         entity.createdAt = new Date();
-
         return this.createProjectUseCase.execute(entity)
             .pipe(map((e: ProjectEntity) => this.mapper.toResponse(e)));
     }
 
     delete(id: string): Observable<Result<ProjectResponse>> {
-        return of();
+        this.deleteProjectUseCase.execute(id);
+        return of(this.mapper.toEmptyResponse());
     }
 
     fetchAll(): Observable<Result<ProjectResponse[]>> {
@@ -44,11 +55,12 @@ export class ProjectInteractor extends IProjectInteractor {
     }
 
     fetchOne(id: string): Observable<Result<ProjectResponse>> {
-        return of();
+        return this.fetchProjectUseCase.execute(id)
+            .pipe(map((e: ProjectEntity | undefined) => this.mapper.toResponse(e)));
     }
 
     update(id: string, request: ProjectRequest): Observable<Result<ProjectResponse>> {
-        return of();
+        this.updateProjectUseCase.execute({id: id, request: this.mapper.fromRequest(request)});
+        return of(this.mapper.toEmptyResponse());
     }
-
 }

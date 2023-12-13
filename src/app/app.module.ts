@@ -34,6 +34,7 @@ import {SettingsComponent} from './presenter/pages/settings/settings.component';
 import {ResourcesComponent} from './presenter/pages/resources/resources.component';
 import {AccountsComponent} from './presenter/pages/accounts/accounts.component';
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {AmountPipe} from './presenter/pipes/amount.pipe';
 
 @NgModule({
     declarations: [
@@ -46,7 +47,8 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
         ClientsComponent,
         SettingsComponent,
         ResourcesComponent,
-        AccountsComponent
+        AccountsComponent,
+        AmountPipe
     ],
     imports: [
         BrowserModule,
@@ -65,6 +67,7 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
         NgbModule
     ],
     providers: [
+        AmountPipe,
         ...DATA_ACCOUNT_IOC,
         ...DATA_CLIENT_IOC,
         ...DATA_PROJECT_IOC,
