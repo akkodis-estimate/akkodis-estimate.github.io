@@ -16,6 +16,7 @@ import {ProjectRequest} from "../../../data/requests/project.request";
 import {ProjectInteractor} from "../../../data/interactors/implementations/project.interactor";
 import {Router} from "@angular/router";
 import {ModalDismissReasons, NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {AmountHelper} from "../../../helpers/amount.helper";
 
 @Component({
     selector: 'app-resources',
@@ -91,45 +92,45 @@ export class ResourcesComponent implements OnInit {
             resourceType: new FormControl(resource.resourceType ? resource.resourceType : "", [Validators.required]),
             workload: new FormControl(resource && resource.workload ? resource.workload : ""),
 
-            basicSalaryPeriod: new FormControl(resource.basicSalary ? this.getPeriod(resource.basicSalary) : 'MONTHLY'),
-            basicSalaryCurrency: new FormControl(resource.basicSalary ? this.getCurrency(resource.basicSalary) : 'AED'),
-            basicSalary: new FormControl(this.getAmount(resource.basicSalary!), [Validators.required]),
+            basicSalaryPeriod: new FormControl(resource.basicSalary ? AmountHelper.getAmountPeriod(resource.basicSalary) : 'MONTHLY'),
+            basicSalaryCurrency: new FormControl(resource.basicSalary ? AmountHelper.getAmountCurrency(resource.basicSalary) : 'AED'),
+            basicSalary: new FormControl(AmountHelper.getAmount(resource.basicSalary!), [Validators.required]),
 
-            allowancePeriod: new FormControl(resource.allowance ? this.getPeriod(resource.allowance) : 'MONTHLY'),
-            allowanceCurrency: new FormControl(this.getCurrency(resource.allowance!)),
-            allowance: new FormControl(this.getAmount(resource.allowance!)),
+            allowancePeriod: new FormControl(resource.allowance ? AmountHelper.getAmountPeriod(resource.allowance) : 'MONTHLY'),
+            allowanceCurrency: new FormControl(AmountHelper.getAmountCurrency(resource.allowance!)),
+            allowance: new FormControl(AmountHelper.getAmount(resource.allowance!)),
 
-            gratuityPeriod: new FormControl(resource.gratuity ? this.getPeriod(resource.gratuity) : 'ANNUALLY'),
-            gratuityCurrency: new FormControl(this.getCurrency(resource.gratuity!)),
-            gratuity: new FormControl(this.getAmount(resource.gratuity!)),
+            gratuityPeriod: new FormControl(resource.gratuity ? AmountHelper.getAmountPeriod(resource.gratuity) : 'ANNUALLY'),
+            gratuityCurrency: new FormControl(AmountHelper.getAmountCurrency(resource.gratuity!)),
+            gratuity: new FormControl(AmountHelper.getAmount(resource.gratuity!)),
 
-            insurancePeriod: new FormControl(resource.insurance ? this.getPeriod(resource.insurance) : 'ANNUALLY'),
-            insuranceCurrency: new FormControl(this.getCurrency(resource.insurance!)),
-            insurance: new FormControl(resource.insurance ? this.getAmount(resource.insurance) : '790'),
+            insurancePeriod: new FormControl(resource.insurance ? AmountHelper.getAmountPeriod(resource.insurance) : 'ANNUALLY'),
+            insuranceCurrency: new FormControl(AmountHelper.getAmountCurrency(resource.insurance!)),
+            insurance: new FormControl(resource.insurance ? AmountHelper.getAmount(resource.insurance) : '790'),
 
-            flightTicketPeriod: new FormControl(resource.flightTicket ? this.getPeriod(resource.flightTicket) : 'ANNUALLY'),
-            flightTicketCurrency: new FormControl(this.getCurrency(resource.flightTicket!)),
-            flightTicket: new FormControl(resource.flightTicket ? this.getAmount(resource.flightTicket) : '2500'),
+            flightTicketPeriod: new FormControl(resource.flightTicket ? AmountHelper.getAmountPeriod(resource.flightTicket) : 'ANNUALLY'),
+            flightTicketCurrency: new FormControl(AmountHelper.getAmountCurrency(resource.flightTicket!)),
+            flightTicket: new FormControl(resource.flightTicket ? AmountHelper.getAmount(resource.flightTicket) : '2500'),
 
-            workPermitPeriod: new FormControl(resource.workPermit ? this.getPeriod(resource.workPermit) : 'ANNUALLY'),
-            workPermitCurrency: new FormControl(this.getCurrency(resource.workPermit!)),
-            workPermit: new FormControl(resource.workPermit ? this.getAmount(resource.workPermit) : '6500'),
+            workPermitPeriod: new FormControl(resource.workPermit ? AmountHelper.getAmountPeriod(resource.workPermit) : 'ANNUALLY'),
+            workPermitCurrency: new FormControl(AmountHelper.getAmountCurrency(resource.workPermit!)),
+            workPermit: new FormControl(resource.workPermit ? AmountHelper.getAmount(resource.workPermit) : '6500'),
 
-            officePeriod: new FormControl(resource.office ? this.getPeriod(resource.office) : 'DAILY'),
-            officeCurrency: new FormControl(this.getCurrency(resource.office!)),
-            office: new FormControl(resource.office ? this.getAmount(resource.office) : '19'),
+            officePeriod: new FormControl(resource.office ? AmountHelper.getAmountPeriod(resource.office) : 'DAILY'),
+            officeCurrency: new FormControl(AmountHelper.getAmountCurrency(resource.office!)),
+            office: new FormControl(resource.office ? AmountHelper.getAmount(resource.office) : '19'),
 
-            generalSupportPackagePeriod: new FormControl(resource.generalSupportPackage ? this.getPeriod(resource.generalSupportPackage) : 'DAILY'),
-            generalSupportPackageCurrency: new FormControl(this.getCurrency(resource.generalSupportPackage!)),
-            generalSupportPackage: new FormControl(resource.generalSupportPackage ? this.getAmount(resource.generalSupportPackage) : '15'),
+            generalSupportPackagePeriod: new FormControl(resource.generalSupportPackage ? AmountHelper.getAmountPeriod(resource.generalSupportPackage) : 'DAILY'),
+            generalSupportPackageCurrency: new FormControl(AmountHelper.getAmountCurrency(resource.generalSupportPackage!)),
+            generalSupportPackage: new FormControl(resource.generalSupportPackage ? AmountHelper.getAmount(resource.generalSupportPackage) : '15'),
 
-            laptopWorkstationPeriod: new FormControl(resource.laptopWorkstation ? this.getPeriod(resource.laptopWorkstation) : 'ANNUALLY'),
-            laptopWorkstationCurrency: new FormControl(this.getCurrency(resource.laptopWorkstation!)),
-            laptopWorkstation: new FormControl(resource.laptopWorkstation ? this.getAmount(resource.laptopWorkstation) : '5000'),
+            laptopWorkstationPeriod: new FormControl(resource.laptopWorkstation ? AmountHelper.getAmountPeriod(resource.laptopWorkstation) : 'ANNUALLY'),
+            laptopWorkstationCurrency: new FormControl(AmountHelper.getAmountCurrency(resource.laptopWorkstation!)),
+            laptopWorkstation: new FormControl(resource.laptopWorkstation ? AmountHelper.getAmount(resource.laptopWorkstation) : '5000'),
 
-            licensesPeriod: new FormControl(resource.licenses ? this.getPeriod(resource.licenses) : 'ANNUALLY'),
-            licensesCurrency: new FormControl(this.getCurrency(resource.licenses!)),
-            licenses: new FormControl(resource.licenses ? this.getAmount(resource.licenses) : '400'),
+            licensesPeriod: new FormControl(resource.licenses ? AmountHelper.getAmountPeriod(resource.licenses) : 'ANNUALLY'),
+            licensesCurrency: new FormControl(AmountHelper.getAmountCurrency(resource.licenses!)),
+            licenses: new FormControl(resource.licenses ? AmountHelper.getAmount(resource.licenses) : '400'),
         });
     }
 
@@ -161,94 +162,22 @@ export class ResourcesComponent implements OnInit {
         });
     }
 
-    splitAmount(amount: string): string[] {
-        return amount.split(" ");
-    }
-
-    getAmount(amount: string): string {
-        return amount ? this.splitAmount(amount)[2] : "";
-    }
-
-    getCurrency(amount: string): string {
-        return amount ? this.splitAmount(amount)[1] : CurrencyEnum.AED;
-    }
-
-    getPeriod(amount: string): string {
-        return amount ? this.splitAmount(amount)[0] : PeriodEnum.Annually;
-    }
-
-    calculateAttributeAnnualCost(attribute: string): number {
-        let cost: number = 0;
-        let splitAttr = this.splitAmount(attribute);
-        switch (splitAttr[0]) {
-            case PeriodEnum.Annually:
-                cost = +splitAttr[2];
-                break;
-            case PeriodEnum.Monthly:
-                cost = +splitAttr[2] * 12;
-                break;
-            case PeriodEnum.Weekly:
-                cost = +splitAttr[2] * 52;
-                break;
-            case PeriodEnum.Daily:
-                cost = +splitAttr[2] * 228;
-                break;
-            case PeriodEnum.Hourly:
-                cost = +splitAttr[2] * 52 * 48;
-                break;
-        }
-        return cost;
-    }
-
-    calculateTotalAnnualCost(): number {
-        let cost: number = 0;
-        this.resources.forEach(resource => {
-            cost += this.calculateAttributeAnnualCost(resource.basicSalary!);
-            cost += this.calculateAttributeAnnualCost(resource.allowance!);
-            cost += this.calculateAttributeAnnualCost(resource.gratuity!);
-            cost += this.calculateAttributeAnnualCost(resource.insurance!);
-            cost += this.calculateAttributeAnnualCost(resource.flightTicket!);
-            cost += this.calculateAttributeAnnualCost(resource.workPermit!);
-            cost += this.calculateAttributeAnnualCost(resource.office!);
-            cost += this.calculateAttributeAnnualCost(resource.generalSupportPackage!);
-            cost += this.calculateAttributeAnnualCost(resource.laptopWorkstation!);
-            cost += this.calculateAttributeAnnualCost(resource.licenses!);
-        });
-        return cost;
-    }
-
-    calculateByCurrencyAndPeriod(amount: number, currency: CurrencyEnum, period: PeriodEnum): number {
-        switch (period) {
-            case PeriodEnum.Annually:
-                break;
-            case PeriodEnum.Monthly:
-                amount = amount / 12;
-                break;
-            case PeriodEnum.Weekly:
-                amount = amount / 52;
-                break;
-            case PeriodEnum.Daily:
-                amount = amount / 228;
-                break;
-            case PeriodEnum.Hourly:
-                amount = amount / (52 * 48);
-                break;
-            default:
-                break;
-        }
-        return amount;
-    }
-
     calculateCurrencyPeriodCost(currency: CurrencyEnum, period: PeriodEnum): number {
-        return this.calculateByCurrencyAndPeriod(this.calculateTotalAnnualCost(), currency, period);
+        return AmountHelper.convertToAnnualAmount(AmountHelper.calculateTotalAnnualCost(this.resources), period);
     }
 
     calculateTotalAnnualPrice(): number {
-        return (1 + (this.project.margin! / 100)) * (1 + (this.project.riskProvision! / 100)) * this.calculateTotalAnnualCost();
+        return (1 + (this.project.margin! / 100)) * (1 + (this.project.riskProvision! / 100)) * AmountHelper.calculateTotalAnnualCost(this.resources);
+    }
+
+    calculateMargin(price: number, period: PeriodEnum) {
+        let annualCost: number = AmountHelper.calculateTotalAnnualCost(this.resources);
+        let annualPrice: number = AmountHelper.convertToAnnualAmount(price, period);
+        return ((annualPrice / ((1 + (this.project.riskProvision! / 100)) * annualCost)) - 1) * 100;
     }
 
     calculateCurrencyPeriodPrice(currency: CurrencyEnum, period: PeriodEnum): number {
-        return this.calculateByCurrencyAndPeriod(this.calculateTotalAnnualPrice(), currency, period);
+        return AmountHelper.convertToAnnualAmount(this.calculateTotalAnnualPrice(), period);
     }
 
     onSubmit() {
@@ -490,18 +419,17 @@ export class ResourcesComponent implements OnInit {
         this.open(content);
     }
 
-    onSubmitPrices() {
-
-    }
-
     onChangePrice(period: PeriodEnum, currency: CurrencyEnum, amount: any) {
-        console.log(period);
-        console.log(currency);
-        console.log(amount.target.value);
-    }
+        this.projectForm = new FormGroup({
+            title: new FormControl(this.project.title, [Validators.required]),
+            client: new FormControl(this.project.client, [Validators.required]),
+            description: new FormControl(this.project.description),
+            duration: new FormControl(this.project.duration),
+            margin: new FormControl(this.calculateMargin(amount.target.value, period)),
+            riskProvision: new FormControl(this.project.riskProvision),
+        });
 
-    calculateMargin() {
-
+        this.onSubmitProject();
     }
 }
 

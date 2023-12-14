@@ -365,7 +365,7 @@
                 <div class="row m-2">
                     <div class="col">
                         <form [formGroup]="projectForm" (ngSubmit)="onSubmitProject()" novalidate class="form-signin">
-                            <label for="margin">Margin (%)</label>
+                            <label for="margin">Margin ({{project.margin | amount}}%)</label>
                             <input type="number"
                                    class="form-control"
                                    formControlName="margin"
@@ -375,7 +375,7 @@
                     </div>
                     <div class="col">
                         <form [formGroup]="projectForm" (ngSubmit)="onSubmitProject()" novalidate class="form-signin">
-                            <label for="riskProvision">Risk provision (%)</label>
+                            <label for="riskProvision">Risk provision ({{project.riskProvision | amount}}%)</label>
                             <input type="number"
                                    class="form-control"
                                    formControlName="riskProvision"
