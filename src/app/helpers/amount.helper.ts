@@ -78,6 +78,7 @@ export class AmountHelper {
             cost += AmountHelper.calculateAttributeAnnualCost(resource.generalSupportPackage!);
             cost += AmountHelper.calculateAttributeAnnualCost(resource.laptopWorkstation!);
             cost += AmountHelper.calculateAttributeAnnualCost(resource.licenses!);
+            cost = cost * (resource.workload! ?? 1);
         });
         return cost;
     }
