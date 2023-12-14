@@ -3,8 +3,7 @@
         <div class="card">
             <div class="card-header">
                 <h4 class="card-title d-inline-block"><b></b> Currencies </h4>
-                <a href="" class="btn btn-outline-primary float-right" data-bs-toggle="modal"
-                   data-bs-target="#addClientModal">Add</a>
+                <a href="" class="btn btn-outline-success float-right">Save</a>
             </div>
             <div class="card-block">
                 <div class="table-responsive">
@@ -50,22 +49,24 @@
                             </td>
                             <td>
                                 <img class="aspect-square" *ngIf="currencyForm.valid" (click)="onSubmitCurrency()"
-                                     src="assets/images/check.png"
-                                     alt="check"
+                                     src="assets/images/save.png"
+                                     alt="save"
                                      data-bs-toggle="tooltip"
                                      data-bs-placement="top"
                                      title="save">
                             </td>
                         </tr>
                         <tr *ngFor="let currency of currencyExchanges">
-                            <td>{{currency.currency1}}</td>
-                            <td>{{currency.currency2}}</td>
-                            <td>{{currency.rate}}</td>
+                            <td (click)="onClickCurrencyExchange(currency)">{{currency.currency1}}</td>
+                            <td (click)="onClickCurrencyExchange(currency)">{{currency.currency2}}</td>
+                            <td (click)="onClickCurrencyExchange(currency)">{{currency.rate}}</td>
                             <td>
                                 <img class="aspect-square action "
                                      src="assets/images/delete.png"
+                                     data-bs-target="#currencyExchangeDeleteModal"
+                                     (click)="onClickCurrencyExchangeToBeDeleted(currency)"
                                      alt="delete"
-                                     data-bs-toggle="tooltip"
+                                     data-bs-toggle="modal"
                                      data-bs-placement="top"
                                      title="delete">
                             </td>
@@ -85,7 +86,7 @@
                 <h4 class="card-title d-inline-block"><b></b> Billable working days :
                     <b *ngIf="workingDaysResponse">{{calculateBillableWorkingDays()}}</b>
                 </h4>
-                <a href="" class="btn btn-outline-success float-right" (click)="onSubmitWorkingDays()">Save</a>
+                <button class="btn btn-outline-success float-right" (click)="onSubmitWorkingDays()">Save</button>
             </div>
             <div class="card-block">
                 <div class="table-responsive">
@@ -180,6 +181,33 @@
                         </select>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal delete confirmation -->
+<div class="modal fade" id="currencyExchangeDeleteModal" tabindex="-1"
+     aria-labelledby="currencyExchangeDeleteModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="currencyExchangeDeleteModalLabel">Delete currency exchange</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <b>Do you really want to delete this currency?</b>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        (click)="onClickDismiss()">Close
+                </button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                        (click)="onClickDeleteCurrencyExchange()">
+                    Confirm
+                </button>
             </div>
         </div>
     </div>

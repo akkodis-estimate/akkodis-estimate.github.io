@@ -25,7 +25,7 @@ export class CurrencyExchangeRepository extends ICurrencyExchangeRepository {
     }
 
     delete(id: string): Observable<void> {
-        return of();
+        return from(this.collection.doc(id).delete());
     }
 
     fetch(id: string): Observable<CurrencyExchangeEntity> {
