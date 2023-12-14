@@ -4,4 +4,5 @@ export const variables = {
     resource: "resource",
     client: "client",
     account: "account",
+    currencyExchange: "currencyExchange",
 }

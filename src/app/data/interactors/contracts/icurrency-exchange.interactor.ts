@@ -12,7 +12,7 @@ export abstract class ICurrencyExchangeInteractor {
 
     abstract create(request: CurrencyExchangeRequest): Observable<Result<CurrencyExchangeResponse>>;
 
-    abstract update(id: string, request: CurrencyExchangeRequest): Observable<Result<CurrencyExchangeResponse>>;
+    abstract update(id: string, request: CurrencyExchangeRequest): Observable<Result<{}>>;
 
-    abstract delete(id: string): Observable<Result<CurrencyExchangeResponse>>;
+    abstract delete(id: string): Observable<Result<{}>>;
 }

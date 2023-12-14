@@ -7,13 +7,19 @@ import {ICurrencyExchangeInteractor} from "../contracts/icurrency-exchange.inter
 import {CurrencyExchangeMapper} from "../../mappers/currency-exchange.mapper";
 import {
     CreateCurrencyExchangeUseCase
-} from "../../../domain/usecases/currency-exchange-usecases/create-currency-exchange-usecase/create-currency-exchange.usecase";
+} from "../../../domain/usecases/currency-exchange-usecases/create-currency-exchange.usecase";
 import {
     FetchCurrencyExchangesUseCase
-} from "../../../domain/usecases/currency-exchange-usecases/fetch-currency-exchanges-usecase/fetch-currency-exchanges.usecase";
+} from "../../../domain/usecases/currency-exchange-usecases/fetch-currency-exchanges.usecase";
 import {CurrencyExchangeRequest} from "../../requests/currency-exchange.request";
 import {CurrencyExchangeResponse} from "../../responses/currency-exchange.response";
 import {CurrencyExchangeEntity} from "../../../domain/entities/currency-exchange.entity";
+import {
+    UpdateCurrencyExchangeUseCase
+} from "../../../domain/usecases/currency-exchange-usecases/update-currency-exchange.usecase";
+import {
+    DeleteCurrencyExchangeUseCase
+} from "../../../domain/usecases/currency-exchange-usecases/delete-currency-exchange.usecase";
 
 @Injectable({providedIn: 'root'})
 export class CurrencyExchangeInteractor extends ICurrencyExchangeInteractor {
@@ -21,6 +27,8 @@ export class CurrencyExchangeInteractor extends ICurrencyExchangeInteractor {
     mapper = new CurrencyExchangeMapper();
 
     constructor(private createCurrencyExchangeUseCase: CreateCurrencyExchangeUseCase,
+                private updateCurrencyExchangeUseCase: UpdateCurrencyExchangeUseCase,
+                private deleteCurrencyExchangeUseCase: DeleteCurrencyExchangeUseCase,
                 private fetchCurrencyExchangesUseCase: FetchCurrencyExchangesUseCase) {
         super();
     }
@@ -35,8 +43,9 @@ export class CurrencyExchangeInteractor extends ICurrencyExchangeInteractor {
             .pipe(map((e: ProjectEntity) => this.mapper.toResponse(e)));
     }
 
-    delete(id: string): Observable<Result<CurrencyExchangeResponse>> {
-        return of();
+    delete(id: string): Observable<Result<{}>> {
+        this.deleteCurrencyExchangeUseCase.execute(id);
+        return of(this.mapper.toEmptyResponse());
     }
 
     fetchAll(): Observable<Result<CurrencyExchangeResponse[]>> {
@@ -48,8 +57,9 @@ export class CurrencyExchangeInteractor extends ICurrencyExchangeInteractor {
         return of();
     }
 
-    update(id: string, request: CurrencyExchangeRequest): Observable<Result<CurrencyExchangeResponse>> {
-        return of();
+    update(id: string, request: CurrencyExchangeRequest): Observable<Result<{}>> {
+        this.updateCurrencyExchangeUseCase.execute({id: id, request: this.mapper.fromRequest(request)});
+        return of(this.mapper.toEmptyResponse());
     }
 
 }

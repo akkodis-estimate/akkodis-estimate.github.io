@@ -1,8 +1,8 @@
 import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
-import {UseCase} from "../../../../core/contracts/usecase.contract";
-import {CurrencyExchangeEntity} from "../../../entities/currency-exchange.entity";
-import {ICurrencyExchangeRepository} from "../../../repositories/icurrency-exchange.repository";
+import {UseCase} from "../../../core/contracts/usecase.contract";
+import {CurrencyExchangeEntity} from "../../entities/currency-exchange.entity";
+import {ICurrencyExchangeRepository} from "../../repositories/icurrency-exchange.repository";
 
 @Injectable({
     providedIn: 'root'

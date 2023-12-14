@@ -8,6 +8,8 @@ import {ToastrService} from "ngx-toastr";
 import {WorkingDaysRequest} from "../../../data/requests/working-days.request";
 import {WorkingDaysInteractor} from "../../../data/interactors/implementations/working-days.interactor";
 import {WorkingDaysResponse} from "../../../data/responses/working-days.response";
+import {LocalStorageService} from "../../services/local-storage/local-storage.service";
+import {variables} from "../../../../environments/variables";
 
 @Component({
     selector: 'app-settings',
@@ -19,6 +21,7 @@ export class SettingsComponent implements OnInit {
     public languages: string[] = ["English"];
     public currencies: CurrencyEnum[] = [];
     public currencyExchanges: CurrencyExchangeResponse[] = [];
+    private selectedCurrencyExchange: CurrencyExchangeResponse | undefined;
     public workingDaysResponse!: WorkingDaysResponse;
     currencyForm: FormGroup;
     workingDaysForm: FormGroup;
@@ -26,6 +29,7 @@ export class SettingsComponent implements OnInit {
 
     constructor(private currencyExchangeInteractor: CurrencyExchangeInteractor,
                 private workingDaysInteractor: WorkingDaysInteractor,
+                private localStorageService: LocalStorageService,
                 private toastr: ToastrService,) {
         this.currencies = Object.values(CurrencyEnum);
 
@@ -100,20 +104,37 @@ export class SettingsComponent implements OnInit {
                 currency2: this.currencyForm.value.currency2,
                 rate: this.currencyForm.value.rate,
             }
-            this.currencyExchangeInteractor.create(request).subscribe({
-                next: value => {
-                    this.toastr.success('currency exchange successfully saved', 'Success');
-                    this.fetchCurrencyExchanges();
-                    this.currencyForm.reset();
-                },
-                error: err => {
-                    this.toastr.error('Error occurred while saving the currency exchange', 'Error');
-                },
-                complete: () => {
-                }
-            });
+
+            if (this.selectedCurrencyExchange && this.selectedCurrencyExchange.id) {
+                this.currencyExchangeInteractor.update(this.selectedCurrencyExchange.id, request).subscribe({
+                    next: value => {
+                        this.toastr.success('currency exchange successfully updated', 'Currency exchange');
+                        this.fetchCurrencyExchanges();
+                        this.selectedCurrencyExchange = undefined;
+                        this.currencyForm.reset();
+                    },
+                    error: err => {
+                        this.toastr.error('Error occurred while updating the currency exchange', 'Currency exchange');
+                    },
+                    complete: () => {
+                    }
+                });
+            } else {
+                this.currencyExchangeInteractor.create(request).subscribe({
+                    next: value => {
+                        this.toastr.success('currency exchange successfully saved', 'Currency exchange');
+                        this.fetchCurrencyExchanges();
+                        this.currencyForm.reset();
+                    },
+                    error: err => {
+                        this.toastr.error('Error occurred while saving the currency exchange', 'Currency exchange');
+                    },
+                    complete: () => {
+                    }
+                });
+            }
         } else {
-            this.toastr.error('Some inputs are incorrect', 'Error');
+            this.toastr.error('Some inputs are incorrect', 'Currency exchange');
         }
     }
 
@@ -145,5 +166,43 @@ export class SettingsComponent implements OnInit {
 
     onSubmitLanguage() {
 
+    }
+
+    onClickCurrencyExchangeToBeDeleted(currency: CurrencyExchangeResponse) {
+        this.localStorageService.add(variables.currencyExchange, currency);
+    }
+
+    onClickDismiss() {
+        this.localStorageService.delete(variables.currencyExchange);
+    }
+
+    onClickDeleteCurrencyExchange() {
+        let currencyExchange = this.localStorageService.get(variables.currencyExchange);
+        if (currencyExchange && currencyExchange.id) {
+            this.currencyExchangeInteractor.delete(currencyExchange.id!).subscribe({
+                next: value => {
+                    this.localStorageService.delete(variables.currencyExchange);
+                    this.toastr.success("Currency exchange deleted successfully", "Delete currency exchange");
+                },
+                error: err => {
+                    this.localStorageService.delete(variables.currencyExchange);
+                    this.toastr.error("Error occurred while deleting the currency exchange", "Delete currency exchange");
+                },
+                complete: () => {
+                }
+            });
+        } else {
+            this.localStorageService.delete(variables.currencyExchange);
+            this.toastr.error("Currency exchange not found", "Delete currency exchange");
+        }
+    }
+
+    onClickCurrencyExchange(currency: CurrencyExchangeResponse) {
+        this.selectedCurrencyExchange = currency;
+        this.currencyForm = new FormGroup({
+            currency1: new FormControl(currency.currency1, [Validators.required]),
+            currency2: new FormControl(currency.currency2, [Validators.required]),
+            rate: new FormControl(currency.rate, [Validators.required]),
+        });
     }
 }

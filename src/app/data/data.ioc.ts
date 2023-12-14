@@ -37,10 +37,10 @@ import {CurrencyExchangeInteractor} from "./interactors/implementations/currency
 import {CurrencyExchangeRepository} from "./datasources/remote/firebase/currency-exchange/currency-exchange.repository";
 import {
     FetchCurrencyExchangesUseCase
-} from "../domain/usecases/currency-exchange-usecases/fetch-currency-exchanges-usecase/fetch-currency-exchanges.usecase";
+} from "../domain/usecases/currency-exchange-usecases/fetch-currency-exchanges.usecase";
 import {
     CreateCurrencyExchangeUseCase
-} from "../domain/usecases/currency-exchange-usecases/create-currency-exchange-usecase/create-currency-exchange.usecase";
+} from "../domain/usecases/currency-exchange-usecases/create-currency-exchange.usecase";
 import {
     FetchProjectResourcesUseCase
 } from "../domain/usecases/resource-usecases/fetch-project-resources.usecase/fetch-project-resources.usecase";
@@ -57,6 +57,12 @@ import {
     UpdateResourceUseCase
 } from "../domain/usecases/resource-usecases/update-resource-usecase/update-resource.usecase";
 import {FetchProjectUseCase} from "../domain/usecases/project-usecases/fetch-project-usecase/fetch-project.usecase";
+import {
+    DeleteCurrencyExchangeUseCase
+} from "../domain/usecases/currency-exchange-usecases/delete-currency-exchange.usecase";
+import {
+    UpdateCurrencyExchangeUseCase
+} from "../domain/usecases/currency-exchange-usecases/update-currency-exchange.usecase";
 
 export const DATA_ACCOUNT_IOC: Provider[] = [
     {
@@ -242,5 +248,15 @@ export const DATA_CURRENCY_EXCHANGE_IOC: Provider[] = [
         deps: [CurrencyExchangeRepository],
         provide: CreateCurrencyExchangeUseCase,
         useFactory: (repository: CurrencyExchangeRepository) => new CreateCurrencyExchangeUseCase(repository),
+    },
+    {
+        deps: [CurrencyExchangeRepository],
+        provide: DeleteCurrencyExchangeUseCase,
+        useFactory: (repository: CurrencyExchangeRepository) => new DeleteCurrencyExchangeUseCase(repository),
+    },
+    {
+        deps: [CurrencyExchangeRepository],
+        provide: UpdateCurrencyExchangeUseCase,
+        useFactory: (repository: CurrencyExchangeRepository) => new UpdateCurrencyExchangeUseCase(repository),
     }
 ];
