@@ -17,6 +17,8 @@ import {ProjectInteractor} from "../../../data/interactors/implementations/proje
 import {Router} from "@angular/router";
 import {ModalDismissReasons, NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import {AmountHelper} from "../../../helpers/amount.helper";
+import {CurrencyExchangeInteractor} from "../../../data/interactors/implementations/currency-exchange.interactor";
+import {CurrencyExchangeResponse} from "../../../data/responses/currency-exchange.response";
 
 @Component({
     selector: 'app-resources',
@@ -34,6 +36,7 @@ export class ResourcesComponent implements OnInit {
     public periods: PeriodEnum[] = [];
     public displayCurrencies: CurrencyEnum[] = [];
     public displayPeriods: PeriodEnum[] = [];
+    public currencyExchanges: CurrencyExchangeResponse[] = [];
     resourceForm: FormGroup;
     projectForm: FormGroup;
     displayForm: FormGroup;
@@ -41,11 +44,13 @@ export class ResourcesComponent implements OnInit {
     closeResult = '';
     private editResourceModalReference!: NgbModalRef;
     selectedResource!: ResourceResponse | undefined;
+    editPrice: string = "";
 
     constructor(private localStorageService: LocalStorageService,
                 private toastr: ToastrService,
                 private router: Router,
                 private modalService: NgbModal,
+                private currencyExchangeInteractor: CurrencyExchangeInteractor,
                 private clientInteractor: ClientInteractor,
                 private projectInteractor: ProjectInteractor,
                 private resourceInteractor: ResourceInteractor) {
@@ -83,6 +88,7 @@ export class ResourcesComponent implements OnInit {
     ngOnInit(): void {
         this.fetchClients();
         this.fetchResources(this.project.id!);
+        this.fetchCurrencyExchanges();
     }
 
     initResourceForm(resource?: ResourceResponse): FormGroup {
@@ -134,6 +140,20 @@ export class ResourcesComponent implements OnInit {
         });
     }
 
+    fetchCurrencyExchanges() {
+        this.currencyExchangeInteractor.fetchAll().subscribe({
+            next: response => {
+                if (response && response.success) {
+                    this.currencyExchanges = response.data!;
+                }
+            },
+            error: err => {
+            },
+            complete: () => {
+            }
+        });
+    }
+
     fetchClients() {
         this.clientInteractor.fetchAll().subscribe({
             next: response => {
@@ -162,22 +182,25 @@ export class ResourcesComponent implements OnInit {
         });
     }
 
-    calculateCurrencyPeriodCost(currency: CurrencyEnum, period: PeriodEnum): number {
-        return AmountHelper.convertToAnnualAmount(AmountHelper.calculateTotalAnnualCost(this.resources), period);
+    calculateCurrencyPeriodCost(currency: CurrencyEnum, period: PeriodEnum): number | undefined {
+        let amount = AmountHelper.convertToAnnualAmount(AmountHelper.calculateTotalAnnualCost(this.resources), period);
+        return AmountHelper.convertAmountToCurrency(amount, currency, this.currencyExchanges);
     }
 
     calculateTotalAnnualPrice(): number {
         return (1 + (this.project.margin! / 100)) * (1 + (this.project.riskProvision! / 100)) * AmountHelper.calculateTotalAnnualCost(this.resources);
     }
 
-    calculateMargin(price: number, period: PeriodEnum) {
+    calculateMargin(price: number, currency: CurrencyEnum, period: PeriodEnum) {
         let annualCost: number = AmountHelper.calculateTotalAnnualCost(this.resources);
-        let annualPrice: number = AmountHelper.convertToAnnualAmount(price, period);
+        let convertedPrice = AmountHelper.convertAmountFromCurrencyToCurrency(price, currency + "/AED", this.currencyExchanges);
+        let annualPrice: number = AmountHelper.convertToAnnualAmount(convertedPrice ?? 0, period);
         return ((annualPrice / ((1 + (this.project.riskProvision! / 100)) * annualCost)) - 1) * 100;
     }
 
-    calculateCurrencyPeriodPrice(currency: CurrencyEnum, period: PeriodEnum): number {
-        return AmountHelper.convertToAnnualAmount(this.calculateTotalAnnualPrice(), period);
+    calculateCurrencyPeriodPrice(currency: CurrencyEnum, period: PeriodEnum): number | undefined {
+        let amount = AmountHelper.convertToAnnualAmount(this.calculateTotalAnnualPrice(), period);
+        return AmountHelper.convertAmountToCurrency(amount, currency, this.currencyExchanges);
     }
 
     onSubmit() {
@@ -204,7 +227,9 @@ export class ResourcesComponent implements OnInit {
                     next: value => {
                         this.selectedResource = undefined;
                         this.resourceForm.reset();
-                        this.editResourceModalReference.dismiss();
+                        if (this.editResourceModalReference) {
+                            this.editResourceModalReference.dismiss();
+                        }
                         this.toastr.success('resource successfully updated', 'Update resource');
                         this.fetchResources(this.project.id!);
                     },
@@ -218,7 +243,9 @@ export class ResourcesComponent implements OnInit {
                 this.resourceInteractor.create(request).subscribe({
                     next: value => {
                         this.resourceForm.reset();
-                        this.editResourceModalReference.dismiss();
+                        if (this.editResourceModalReference) {
+                            this.editResourceModalReference.dismiss();
+                        }
                         this.toastr.success('resource successfully saved', 'Add resource');
                         this.fetchResources(this.project.id!);
                     },
@@ -425,11 +452,43 @@ export class ResourcesComponent implements OnInit {
             client: new FormControl(this.project.client, [Validators.required]),
             description: new FormControl(this.project.description),
             duration: new FormControl(this.project.duration),
-            margin: new FormControl(this.calculateMargin(amount.target.value, period)),
+            margin: new FormControl(this.calculateMargin(amount.target.value, currency, period)),
             riskProvision: new FormControl(this.project.riskProvision),
         });
 
         this.onSubmitProject();
+    }
+
+    onClickResourceDuplicate(resource: ResourceResponse) {
+        this.resourceForm = this.initResourceForm(resource);
+        this.onSubmit();
+    }
+
+    onClickEditPrice(amount: number | undefined, currency: CurrencyEnum, period: PeriodEnum) {
+        // this.editPrice = true;
+        // this.pricesForm = new FormGroup({
+        //     period: new FormControl(period),
+        //     currency: new FormControl(currency),
+        //     amount: new FormControl(amount),
+        // });
+    }
+
+    onMouseLeaveEditPrice() {
+        this.editPrice = "";
+        this.pricesForm.reset();
+    }
+
+    getEditPriceTag() {
+        return this.editPrice;
+    }
+
+    onMouseEnterEditPrice(amount: number | undefined, currency: CurrencyEnum, period: PeriodEnum, i: number, j: number) {
+        this.editPrice = i + "" + j;
+        this.pricesForm = new FormGroup({
+            period: new FormControl(period),
+            currency: new FormControl(currency),
+            amount: new FormControl(amount),
+        });
     }
 }
 

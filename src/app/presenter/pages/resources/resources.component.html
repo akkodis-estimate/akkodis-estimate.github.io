@@ -286,6 +286,7 @@
                             <td>
                                 <img class="aspect-square action "
                                      src="assets/images/duplicate.png"
+                                     (click)="onClickResourceDuplicate(resource)"
                                      alt="duplicate"
                                      data-bs-toggle="tooltip"
                                      data-bs-placement="top"
@@ -324,7 +325,7 @@
                 <form [formGroup]="displayForm" (ngSubmit)="onSubmitDisplay()" novalidate class="form-signin">
                     <div class="row">
                         <div class="col-6">
-                            <label for="period"><strong>Display amount in selected period</strong></label>
+                            <label for="period"><strong>Select a period</strong></label>
                             <select formControlName="period" (change)="onChangePeriod()"
                                     id="period" class="form-control">
                                 <option *ngFor="let period of periods"
@@ -332,7 +333,7 @@
                             </select>
                         </div>
                         <div class="col">
-                            <label for="currency"><strong>Convert amounts in selected currency</strong></label>
+                            <label for="currency"><strong>Select a currency</strong></label>
                             <select formControlName="currency" (change)="onChangeCurrency()"
                                     id="currency" class="form-control">
                                 <option *ngFor="let currency of currencies"
@@ -395,15 +396,16 @@
                         </thead>
                         <tbody>
 
-                        <tr *ngFor="let period of displayPeriods">
+                        <tr *ngFor="let period of displayPeriods ; let i = index">
                             <td><h2>{{period}}</h2></td>
-                            <td *ngFor="let currency of displayCurrencies">
-                                <h2>
+                            <td *ngFor="let currency of displayCurrencies ; let j = index"
+                                (mouseleave)="onMouseLeaveEditPrice()"
+                                (mouseenter)="onMouseEnterEditPrice(calculateCurrencyPeriodPrice(currency, period), currency, period, i, j)">
+                                <h2 *ngIf="'' + i + j != getEditPriceTag()">
                                     {{calculateCurrencyPeriodPrice(currency, period) | amount}}
                                 </h2>
-                                <div [formGroup]="pricesForm">
+                                <div [formGroup]="pricesForm" *ngIf="'' + i + j == getEditPriceTag()">
                                     <input type="number"
-                                           class="form-control"
                                            (change)="onChangePrice(period, currency, $event)"
                                            formControlName="amount"
                                            placeholder="{{calculateCurrencyPeriodPrice(currency, period)}}">

@@ -148,18 +148,18 @@ export class SettingsComponent implements OnInit {
             }
             this.workingDaysInteractor.update(this.workingDaysResponse.id!, request).subscribe({
                 next: value => {
-                    this.toastr.success('working days successfully saved', 'Success');
+                    this.toastr.success('working days successfully updated', 'Working days');
                     this.fetchCurrencyExchanges();
                     this.currencyForm.reset();
                 },
                 error: err => {
-                    this.toastr.error('Error occurred while saving working days', 'Error');
+                    this.toastr.error('Error occurred while updating working days', 'Working days');
                 },
                 complete: () => {
                 }
             });
         } else {
-            this.toastr.error('Some inputs are incorrect', 'Error');
+            this.toastr.error('Some inputs are incorrect', 'Working days');
         }
 
     }

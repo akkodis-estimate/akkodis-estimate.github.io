@@ -10,6 +10,8 @@ import {LocalStorageService} from "../../services/local-storage/local-storage.se
 import {Router} from "@angular/router";
 import {variables} from "../../../../environments/variables";
 import {ClientRequest} from "../../../data/requests/client.request";
+import {ResourceInteractor} from "../../../data/interactors/implementations/resource.interactor";
+import {ResourceRequest} from "../../../data/requests/resource.request";
 
 @Component({
     selector: 'app-dashboard',
@@ -25,6 +27,7 @@ export class DashboardComponent implements OnInit {
     constructor(private projectInteractor: ProjectInteractor,
                 private clientInteractor: IClientInteractor,
                 private localStorageService: LocalStorageService,
+                private resourceInteractor: ResourceInteractor,
                 private router: Router,
                 private toastr: ToastrService,) {
         this.projectForm = new FormGroup({
@@ -86,9 +89,7 @@ export class DashboardComponent implements OnInit {
                 margin: 18,
                 riskProvision: 0
             };
-            console.log(request);
             let clientResponse: ClientResponse | undefined = this.getClientById(request.client!);
-            console.log(clientResponse);
             if (clientResponse) {
                 request.client = clientResponse.id;
                 this.saveProject(request);
@@ -103,19 +104,19 @@ export class DashboardComponent implements OnInit {
                 this.saveClient(clientRequest, request);
             }
         } else {
-            this.toastr.error('Some inputs are incorrect', 'Error');
+            this.toastr.error('Some inputs are incorrect', 'Save project');
         }
     }
 
     saveProject(request: ProjectRequest) {
         this.projectInteractor.create(request).subscribe({
             next: value => {
-                this.toastr.success('project successfully saved', 'Success');
+                this.toastr.success('project successfully saved', 'Save project');
                 this.projectForm.reset();
                 this.fetchProjects();
             },
             error: err => {
-                this.toastr.error('Error occurred while saving the project', 'Error');
+                this.toastr.error('Error occurred while saving the project', 'Save project');
             },
             complete: () => {
             }
@@ -129,7 +130,7 @@ export class DashboardComponent implements OnInit {
                 this.saveProject(projectRequest);
             },
             error: err => {
-                this.toastr.error('Error occurred while saving the client', 'Error');
+                this.toastr.error('Error occurred while saving the client', 'Save client');
             },
             complete: () => {
             }
@@ -177,5 +178,68 @@ export class DashboardComponent implements OnInit {
             this.localStorageService.delete(variables.project);
             this.toastr.error("Project not found", "Delete project");
         }
+    }
+
+    fetchResources(projectId: string) {
+        this.resourceInteractor.fetchByProject(projectId).subscribe({
+            next: response => {
+                if (response && response.success) {
+                    let resources = response.data!;
+                }
+            },
+            error: err => {
+            },
+            complete: () => {
+            }
+        });
+    }
+
+    onClickProjectDuplicate(project: ProjectResponse) {
+        let request: ProjectRequest = {
+            title: project.title + "_duplicated",
+            duration: project.duration,
+            description: project.description,
+            client: project.client,
+            margin: project.margin,
+            riskProvision: project.riskProvision
+        };
+        this.projectInteractor.create(request).subscribe({
+            next: duplicatedProject => {
+                this.resourceInteractor.fetchByProject(project.id!).subscribe({
+                    next: resources => {
+                        resources.data?.forEach(response => {
+                            let request: ResourceRequest = {
+                                jobTitle: response.jobTitle,
+                                resourceType: response.resourceType,
+                                workload: response.workload,
+                                project: duplicatedProject.data?.id,
+                                basicSalary: response.basicSalary,
+                                allowance: response.allowance,
+                                gratuity: response.gratuity,
+                                insurance: response.insurance,
+                                flightTicket: response.flightTicket,
+                                workPermit: response.workPermit,
+                                office: response.office,
+                                generalSupportPackage: response.generalSupportPackage,
+                                laptopWorkstation: response.laptopWorkstation,
+                                licenses: response.licenses,
+                            };
+                            this.resourceInteractor.create(request);
+                        });
+                        this.toastr.success('project successfully duplicated', 'Duplicate project');
+                    },
+                    error: err => {
+                        this.toastr.error('Error occurred while duplicating the project', 'Duplicate client');
+                    },
+                    complete: () => {
+                    }
+                });
+            },
+            error: err => {
+                this.toastr.error('Error occurred while duplicating the project', 'Duplicate client');
+            },
+            complete: () => {
+            }
+        });
     }
 }

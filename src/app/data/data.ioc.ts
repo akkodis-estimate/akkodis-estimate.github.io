@@ -28,9 +28,7 @@ import {
 import {IWorkingDaysInteractor} from "./interactors/contracts/iworking-days.interactor";
 import {WorkingDaysInteractor} from "./interactors/implementations/working-days.interactor";
 import {WorkingDaysRepository} from "./datasources/remote/firebase/working-days/working-days.repository";
-import {
-    FetchWorkingDaysUseCase
-} from "../domain/usecases/working-days-usescases/fetch-working-days-usecase/fetch-working-days.usecase";
+import {FetchWorkingDaysUseCase} from "../domain/usecases/working-days-usescases/fetch-working-days.usecase";
 import {FetchAccountsUseCase} from "../domain/usecases/account-usescases/fetch-accounts-usecase/fetch-accounts.usecase";
 import {ICurrencyExchangeInteractor} from "./interactors/contracts/icurrency-exchange.interactor";
 import {CurrencyExchangeInteractor} from "./interactors/implementations/currency-exchange.interactor";
@@ -63,6 +61,7 @@ import {
 import {
     UpdateCurrencyExchangeUseCase
 } from "../domain/usecases/currency-exchange-usecases/update-currency-exchange.usecase";
+import {UpdateWorkingDaysUseCase} from "../domain/usecases/working-days-usescases/update-working-days.usecase";
 
 export const DATA_ACCOUNT_IOC: Provider[] = [
     {
@@ -226,6 +225,11 @@ export const DATA_WORKING_DAYS_IOC: Provider[] = [
         deps: [WorkingDaysRepository],
         provide: FetchWorkingDaysUseCase,
         useFactory: (repository: WorkingDaysRepository) => new FetchWorkingDaysUseCase(repository),
+    },
+    {
+        deps: [WorkingDaysRepository],
+        provide: UpdateWorkingDaysUseCase,
+        useFactory: (repository: WorkingDaysRepository) => new UpdateWorkingDaysUseCase(repository),
     }
 ];
 

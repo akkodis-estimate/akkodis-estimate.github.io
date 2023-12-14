@@ -1,6 +1,7 @@
 import {PeriodEnum} from "../core/enums/PeriodEnum";
 import {CurrencyEnum} from "../core/enums/CurrencyEnum";
 import {ResourceResponse} from "../data/responses/resource.response";
+import {CurrencyExchangeResponse} from "../data/responses/currency-exchange.response";
 
 export class AmountHelper {
     static convertToAnnualAmount(amount: number, period: PeriodEnum): number {
@@ -79,5 +80,44 @@ export class AmountHelper {
             cost += AmountHelper.calculateAttributeAnnualCost(resource.licenses!);
         });
         return cost;
+    }
+
+    static convertAmountToCurrency(amount: number, currency: CurrencyEnum, currencyExchanges: CurrencyExchangeResponse[]): number | undefined {
+        let rate = this.getCurrencyRate(currency, currencyExchanges);
+        return rate ? amount * rate : undefined;
+    }
+
+    static convertAmountFromCurrencyToCurrency(amount: number, coupleOfCurrencies: string, currencyExchanges: CurrencyExchangeResponse[]): number | undefined {
+        let currencies: string[] = coupleOfCurrencies.split("/");
+        let rate = this.getRateFromGivenCurrencies(currencies[0], currencies[1], currencyExchanges);
+        return rate ? amount * rate : undefined;
+    }
+
+    static getRateFromGivenCurrencies(currency1: string, currency2: string, currencyExchanges: CurrencyExchangeResponse[]): number | undefined {
+        let rate: number | undefined;
+        if (currency1 == currency1) {
+            return 1;
+        }
+        currencyExchanges.forEach(value => {
+            if (value.currency1 == currency1 && value.currency2 == currency2) {
+                rate = value.rate;
+            }
+        });
+        return rate;
+    }
+
+    static getCurrencyRate(currency: CurrencyEnum, currencyExchanges: CurrencyExchangeResponse[]): number | undefined {
+        let rate: number | undefined;
+        if (currency == CurrencyEnum.AED) {
+            return 1;
+        }
+        currencyExchanges.forEach(value => {
+            if (value.currency1 == CurrencyEnum.AED && value.currency2 == currency) {
+                rate = value.rate;
+            } else if (value.currency1 == currency && value.currency2 == CurrencyEnum.AED) {
+                rate = 1 / value.rate;
+            }
+        });
+        return rate;
     }
 }

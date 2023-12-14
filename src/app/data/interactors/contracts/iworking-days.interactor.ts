@@ -8,5 +8,5 @@ import {WorkingDaysRequest} from "../../requests/working-days.request";
 export abstract class IWorkingDaysInteractor {
     abstract fetch(): Observable<Result<WorkingDaysResponse>>;
 
-    abstract update(id: string, request: WorkingDaysRequest): Observable<Result<WorkingDaysResponse>>;
+    abstract update(id: string, request: WorkingDaysRequest): Observable<Result<{}>>;
 }

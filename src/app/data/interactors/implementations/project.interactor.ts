@@ -22,17 +22,27 @@ import {
 import {
     FetchProjectUseCase
 } from "../../../domain/usecases/project-usecases/fetch-project-usecase/fetch-project.usecase";
+import {
+    FetchProjectResourcesUseCase
+} from "../../../domain/usecases/resource-usecases/fetch-project-resources.usecase/fetch-project-resources.usecase";
+import {
+    CreateResourceUseCase
+} from "../../../domain/usecases/resource-usecases/create-resource-usecase/create-resource.usecase";
+import {ResourceMapper} from "../../mappers/resource.mapper";
 
 @Injectable({providedIn: 'root'})
 export class ProjectInteractor extends IProjectInteractor {
 
     mapper = new ProjectMapper();
+    resourceMapper = new ResourceMapper();
 
     constructor(private createProjectUseCase: CreateProjectUseCase,
                 private deleteProjectUseCase: DeleteProjectUseCase,
                 private updateProjectUseCase: UpdateProjectUseCase,
                 private fetchProjectUseCase: FetchProjectUseCase,
-                private fetchProjectsUseCase: FetchProjectsUseCase) {
+                private fetchProjectsUseCase: FetchProjectsUseCase,
+                private fetchProjectResourcesUseCase: FetchProjectResourcesUseCase,
+                private createResourceUseCase: CreateResourceUseCase) {
         super();
     }
 
