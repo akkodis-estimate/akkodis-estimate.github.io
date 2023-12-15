@@ -10,6 +10,7 @@ import {WorkingDaysInteractor} from "../../../data/interactors/implementations/w
 import {WorkingDaysResponse} from "../../../data/responses/working-days.response";
 import {LocalStorageService} from "../../services/local-storage/local-storage.service";
 import {variables} from "../../../../environments/variables";
+import {AmountHelper} from "../../../helpers/amount.helper";
 
 @Component({
     selector: 'app-settings',
@@ -74,13 +75,6 @@ export class SettingsComponent implements OnInit {
             complete: () => {
             }
         });
-    }
-
-    calculateBillableWorkingDays(): number {
-        return this.workingDaysResponse.totalCalendarDays
-            - this.workingDaysResponse.weekends
-            - this.workingDaysResponse.paidLeave
-            - this.workingDaysResponse.publicHolidays;
     }
 
     private fetchCurrencyExchanges() {
@@ -205,4 +199,6 @@ export class SettingsComponent implements OnInit {
             rate: new FormControl(currency.rate, [Validators.required]),
         });
     }
+
+    protected readonly AmountHelper = AmountHelper;
 }
