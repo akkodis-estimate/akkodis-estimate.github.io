@@ -84,7 +84,7 @@
         <div class="card">
             <div class="card-header">
                 <h4 class="card-title d-inline-block"><b></b> Billable working days :
-                    <b *ngIf="workingDaysResponse">{{calculateBillableWorkingDays()}}</b>
+                    <b *ngIf="workingDaysResponse">{{AmountHelper.calculateBillableWorkingDays(workingDaysResponse)}}</b>
                 </h4>
                 <button class="btn btn-outline-success float-right" (click)="onSubmitWorkingDays()">Save</button>
             </div>

@@ -19,6 +19,8 @@ import {ModalDismissReasons, NgbModal, NgbModalRef} from "@ng-bootstrap/ng-boots
 import {AmountHelper} from "../../../helpers/amount.helper";
 import {CurrencyExchangeInteractor} from "../../../data/interactors/implementations/currency-exchange.interactor";
 import {CurrencyExchangeResponse} from "../../../data/responses/currency-exchange.response";
+import {WorkingDaysInteractor} from "../../../data/interactors/implementations/working-days.interactor";
+import {WorkingDaysResponse} from "../../../data/responses/working-days.response";
 
 @Component({
     selector: 'app-resources',
@@ -37,6 +39,7 @@ export class ResourcesComponent implements OnInit {
     public displayCurrencies: CurrencyEnum[] = [];
     public displayPeriods: PeriodEnum[] = [];
     public currencyExchanges: CurrencyExchangeResponse[] = [];
+    public workingDays!: WorkingDaysResponse;
     resourceForm: FormGroup;
     projectForm: FormGroup;
     displayForm: FormGroup;
@@ -54,6 +57,7 @@ export class ResourcesComponent implements OnInit {
                 private router: Router,
                 private modalService: NgbModal,
                 private currencyExchangeInteractor: CurrencyExchangeInteractor,
+                private workingDaysInteractor: WorkingDaysInteractor,
                 private clientInteractor: ClientInteractor,
                 private projectInteractor: ProjectInteractor,
                 private resourceInteractor: ResourceInteractor) {
@@ -92,6 +96,19 @@ export class ResourcesComponent implements OnInit {
         this.fetchClients();
         this.fetchResources(this.project.id!);
         this.fetchCurrencyExchanges();
+        this.fetchWorkingDays();
+    }
+
+    fetchWorkingDays() {
+        this.workingDaysInteractor.fetch().subscribe({
+            next: value => {
+                this.workingDays = value.data!;
+            },
+            error: err => {
+            },
+            complete: () => {
+            }
+        });
     }
 
     initResourceForm(resource?: ResourceResponse): FormGroup {
@@ -198,16 +215,16 @@ export class ResourcesComponent implements OnInit {
     }
 
     calculateCurrencyPeriodCost(currency: CurrencyEnum, period: PeriodEnum): number | undefined {
-        let amount = AmountHelper.convertToAnnualAmount(AmountHelper.calculateTotalAnnualCost(this.resources), period);
+        let amount = AmountHelper.convertToAnnualAmount(AmountHelper.calculateTotalAnnualCost(this.resources, this.workingDays), period);
         return AmountHelper.convertAmountToCurrency(amount, currency, this.currencyExchanges);
     }
 
     calculateTotalAnnualPrice(): number {
-        return (1 + (this.project.margin! / 100)) * (1 + (this.project.riskProvision! / 100)) * AmountHelper.calculateTotalAnnualCost(this.resources);
+        return (1 + (this.project.margin! / 100)) * (1 + (this.project.riskProvision! / 100)) * AmountHelper.calculateTotalAnnualCost(this.resources, this.workingDays);
     }
 
     calculateMargin(price: number, currency: CurrencyEnum, period: PeriodEnum) {
-        let annualCost: number = AmountHelper.calculateTotalAnnualCost(this.resources);
+        let annualCost: number = AmountHelper.calculateTotalAnnualCost(this.resources, this.workingDays);
         let convertedPrice = AmountHelper.convertAmountFromCurrencyToCurrency(price, currency + "/AED", this.currencyExchanges);
         let annualPrice: number = AmountHelper.convertToAnnualAmount(convertedPrice ?? 0, period);
         return ((annualPrice / ((1 + (this.project.riskProvision! / 100)) * annualCost)) - 1) * 100;

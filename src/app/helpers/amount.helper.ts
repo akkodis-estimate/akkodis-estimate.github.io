@@ -2,6 +2,7 @@ import {PeriodEnum} from "../core/enums/PeriodEnum";
 import {CurrencyEnum} from "../core/enums/CurrencyEnum";
 import {ResourceResponse} from "../data/responses/resource.response";
 import {CurrencyExchangeResponse} from "../data/responses/currency-exchange.response";
+import {WorkingDaysResponse} from "../data/responses/working-days.response";
 
 export class AmountHelper {
     static convertToAnnualAmount(amount: number, period: PeriodEnum): number {
@@ -42,7 +43,7 @@ export class AmountHelper {
         return amount ? AmountHelper.splitAmount(amount)[1] : CurrencyEnum.AED;
     }
 
-    static calculateAttributeAnnualCost(attribute: string): number {
+    static calculateAttributeAnnualCost(attribute: string, billableWorkingDays: number): number {
         let cost: number = 0;
         let splitAttr = AmountHelper.splitAmount(attribute);
         switch (splitAttr[0]) {
@@ -56,7 +57,7 @@ export class AmountHelper {
                 cost = +splitAttr[2] * 52;
                 break;
             case PeriodEnum.Daily:
-                cost = +splitAttr[2] * 228;
+                cost = +splitAttr[2] * billableWorkingDays;
                 break;
             case PeriodEnum.Hourly:
                 cost = +splitAttr[2] * 52 * 48;
@@ -65,22 +66,23 @@ export class AmountHelper {
         return cost;
     }
 
-    static calculateTotalAnnualCost(resources: ResourceResponse[]): number {
+    static calculateTotalAnnualCost(resources: ResourceResponse[], workingDays: WorkingDaysResponse): number {
+        let billableWorkingDays: number = this.calculateBillableWorkingDays(workingDays);
         let cost: number = 0;
         resources.forEach(resource => {
-            cost += AmountHelper.calculateAttributeAnnualCost(resource.basicSalary!);
-            cost += AmountHelper.calculateAttributeAnnualCost(resource.allowance!);
-            cost += AmountHelper.calculateAttributeAnnualCost(resource.gratuity!);
-            cost += AmountHelper.calculateAttributeAnnualCost(resource.insurance!);
-            cost += AmountHelper.calculateAttributeAnnualCost(resource.flightTicket!);
-            cost += AmountHelper.calculateAttributeAnnualCost(resource.workPermit!);
-            cost += AmountHelper.calculateAttributeAnnualCost(resource.office!);
-            cost += AmountHelper.calculateAttributeAnnualCost(resource.generalSupportPackage!);
-            cost += AmountHelper.calculateAttributeAnnualCost(resource.laptopWorkstation!);
-            cost += AmountHelper.calculateAttributeAnnualCost(resource.licenses!);
-            cost += AmountHelper.calculateAttributeAnnualCost(resource.mobilizationCost!);
-            cost += AmountHelper.calculateAttributeAnnualCost(resource.parking!);
-            cost += AmountHelper.calculateAttributeAnnualCost(resource.transportation!);
+            cost += AmountHelper.calculateAttributeAnnualCost(resource.basicSalary!, billableWorkingDays);
+            cost += AmountHelper.calculateAttributeAnnualCost(resource.allowance!, billableWorkingDays);
+            cost += AmountHelper.calculateAttributeAnnualCost(resource.gratuity!, billableWorkingDays);
+            cost += AmountHelper.calculateAttributeAnnualCost(resource.insurance!, billableWorkingDays);
+            cost += AmountHelper.calculateAttributeAnnualCost(resource.flightTicket!, billableWorkingDays);
+            cost += AmountHelper.calculateAttributeAnnualCost(resource.workPermit!, billableWorkingDays);
+            cost += AmountHelper.calculateAttributeAnnualCost(resource.office!, billableWorkingDays);
+            cost += AmountHelper.calculateAttributeAnnualCost(resource.generalSupportPackage!, billableWorkingDays);
+            cost += AmountHelper.calculateAttributeAnnualCost(resource.laptopWorkstation!, billableWorkingDays);
+            cost += AmountHelper.calculateAttributeAnnualCost(resource.licenses!, billableWorkingDays);
+            cost += AmountHelper.calculateAttributeAnnualCost(resource.mobilizationCost!, billableWorkingDays);
+            cost += AmountHelper.calculateAttributeAnnualCost(resource.parking!, billableWorkingDays);
+            cost += AmountHelper.calculateAttributeAnnualCost(resource.transportation!, billableWorkingDays);
             cost = cost * (resource.workload ? resource.workload : 1);
         });
         return cost;
@@ -140,5 +142,12 @@ export class AmountHelper {
             default:
                 return "";
         }
+    }
+
+    static calculateBillableWorkingDays(workingDays: WorkingDaysResponse): number {
+        return workingDays.totalCalendarDays
+            - workingDays.weekends
+            - workingDays.paidLeave
+            - workingDays.publicHolidays;
     }
 }
