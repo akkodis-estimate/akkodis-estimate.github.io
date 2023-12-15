@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {LocalStorageService} from "../../services/local-storage/local-storage.service";
+import packageJson from "../../../../../package.json";
 
 @Component({
     selector: 'app-sidebar',
@@ -10,6 +11,8 @@ import {LocalStorageService} from "../../services/local-storage/local-storage.se
 export class SidebarComponent {
 
     menu: string = "dashboard";
+    year: number = new Date().getFullYear();
+    public version: string = packageJson.version;
 
     constructor(private router: Router, private localStorageService: LocalStorageService) {
     }

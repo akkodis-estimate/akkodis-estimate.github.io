@@ -5,6 +5,7 @@ import {ToastrService} from "ngx-toastr";
 import {LocalStorageService} from "../../services/local-storage/local-storage.service";
 import {Router} from "@angular/router";
 import {variables} from "../../../../environments/variables";
+import packageJson from "../../../../../package.json";
 
 @Component({
     selector: 'app-login',
@@ -13,6 +14,8 @@ import {variables} from "../../../../environments/variables";
 export class LoginComponent implements OnInit {
 
     loginForm: FormGroup;
+    year: number = new Date().getFullYear();
+    public version: string = packageJson.version;
 
     constructor(private accountInteractor: IAccountInteractor,
                 private router: Router,
