@@ -6,7 +6,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 export class AmountPipe implements PipeTransform {
 
     transform(value?: number): string {
-        if (value) {
+        if (Number.isFinite(value)) {
             const options = {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2

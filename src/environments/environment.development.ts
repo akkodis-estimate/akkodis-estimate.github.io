@@ -15,6 +15,9 @@ export const environment = {
         office: "DAILY AED 19",
         generalSupportPackage: "DAILY AED 15",
         laptopWorkstation: "ANNUALLY AED 5000",
-        licenses: "ANNUALLY AED 400"
+        licenses: "ANNUALLY AED 400",
+        mobilizationCost: "ANNUALLY AED 3500",
+        parking: "ANNUALLY AED 0",
+        transportation: "ANNUALLY AED 0"
     }
 };

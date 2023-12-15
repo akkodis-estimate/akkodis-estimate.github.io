@@ -15,4 +15,7 @@ export interface ResourceRequest {
     generalSupportPackage?: string;
     laptopWorkstation?: string;
     licenses?: string;
+    mobilizationCost?: string;
+    parking?: string;
+    transportation?: string;
 }

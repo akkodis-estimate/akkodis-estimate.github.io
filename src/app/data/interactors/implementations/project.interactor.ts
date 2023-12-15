@@ -7,28 +7,18 @@ import {IProjectInteractor} from "../contracts/iproject.interactor";
 import {ProjectRequest} from "../../requests/project.request";
 import {ProjectResponse} from "../../responses/project.response";
 import {ProjectMapper} from "../../mappers/project.mapper";
-import {
-    CreateProjectUseCase
-} from "../../../domain/usecases/project-usecases/create-project-usecase/create-project.usecase";
-import {
-    FetchProjectsUseCase
-} from "../../../domain/usecases/project-usecases/fetch-projects-usecase/fetch-projects.usecase";
-import {
-    DeleteProjectUseCase
-} from "../../../domain/usecases/project-usecases/delete-project-usecase/delete-project.usecase";
-import {
-    UpdateProjectUseCase
-} from "../../../domain/usecases/project-usecases/update-project-usecase/update-project.usecase";
-import {
-    FetchProjectUseCase
-} from "../../../domain/usecases/project-usecases/fetch-project-usecase/fetch-project.usecase";
+import {CreateProjectUseCase} from "../../../domain/usecases/project-usecases/create-project.usecase";
+import {FetchProjectsUseCase} from "../../../domain/usecases/project-usecases/fetch-projects.usecase";
+import {DeleteProjectUseCase} from "../../../domain/usecases/project-usecases/delete-project.usecase";
+import {UpdateProjectUseCase} from "../../../domain/usecases/project-usecases/update-project.usecase";
+import {FetchProjectUseCase} from "../../../domain/usecases/project-usecases/fetch-project.usecase";
 import {
     FetchProjectResourcesUseCase
 } from "../../../domain/usecases/resource-usecases/fetch-project-resources.usecase/fetch-project-resources.usecase";
-import {
-    CreateResourceUseCase
-} from "../../../domain/usecases/resource-usecases/create-resource-usecase/create-resource.usecase";
 import {ResourceMapper} from "../../mappers/resource.mapper";
+import {
+    DeleteResourceUseCase
+} from "../../../domain/usecases/resource-usecases/delete-resource-usecase/delete-resource.usecase";
 
 @Injectable({providedIn: 'root'})
 export class ProjectInteractor extends IProjectInteractor {
@@ -42,7 +32,7 @@ export class ProjectInteractor extends IProjectInteractor {
                 private fetchProjectUseCase: FetchProjectUseCase,
                 private fetchProjectsUseCase: FetchProjectsUseCase,
                 private fetchProjectResourcesUseCase: FetchProjectResourcesUseCase,
-                private createResourceUseCase: CreateResourceUseCase) {
+                private deleteResourceUseCase: DeleteResourceUseCase) {
         super();
     }
 
@@ -55,6 +45,15 @@ export class ProjectInteractor extends IProjectInteractor {
     }
 
     delete(id: string): Observable<Result<ProjectResponse>> {
+        this.fetchProjectResourcesUseCase.execute(id).subscribe({
+            next: resources => {
+                resources.forEach(value => this.deleteResourceUseCase.execute(value.id!));
+            },
+            error: err => {
+            },
+            complete: () => {
+            }
+        });
         this.deleteProjectUseCase.execute(id);
         return of(this.mapper.toEmptyResponse());
     }

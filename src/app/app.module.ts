@@ -35,6 +35,8 @@ import {ResourcesComponent} from './presenter/pages/resources/resources.componen
 import {AccountsComponent} from './presenter/pages/accounts/accounts.component';
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {AmountPipe} from './presenter/pipes/amount.pipe';
+import {AmountComponent} from './presenter/components/amount/amount.component';
+import {HashLocationStrategy, LocationStrategy} from "@angular/common";
 
 @NgModule({
     declarations: [
@@ -48,7 +50,8 @@ import {AmountPipe} from './presenter/pipes/amount.pipe';
         SettingsComponent,
         ResourcesComponent,
         AccountsComponent,
-        AmountPipe
+        AmountPipe,
+        AmountComponent
     ],
     imports: [
         BrowserModule,
@@ -67,6 +70,7 @@ import {AmountPipe} from './presenter/pipes/amount.pipe';
         NgbModule
     ],
     providers: [
+        {provide: LocationStrategy, useClass: HashLocationStrategy},
         AmountPipe,
         ...DATA_ACCOUNT_IOC,
         ...DATA_CLIENT_IOC,

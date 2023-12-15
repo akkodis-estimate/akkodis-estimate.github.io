@@ -26,6 +26,9 @@ export class ResourceMapper extends Mapper<ResourceRequest, ResourceResponse, Re
             generalSupportPackage: param.generalSupportPackage,
             laptopWorkstation: param.laptopWorkstation,
             licenses: param.licenses,
+            mobilizationCost: param.mobilizationCost,
+            parking: param.parking,
+            transportation: param.transportation
         }
     }
 
@@ -47,6 +50,9 @@ export class ResourceMapper extends Mapper<ResourceRequest, ResourceResponse, Re
             generalSupportPackage: param.generalSupportPackage,
             laptopWorkstation: param.laptopWorkstation,
             licenses: param.licenses,
+            mobilizationCost: param.mobilizationCost,
+            parking: param.parking,
+            transportation: param.transportation
         };
     }
 
@@ -68,6 +74,9 @@ export class ResourceMapper extends Mapper<ResourceRequest, ResourceResponse, Re
             generalSupportPackage: param.generalSupportPackage ?? environment.resource.generalSupportPackage,
             laptopWorkstation: param.laptopWorkstation ?? environment.resource.laptopWorkstation,
             licenses: param.licenses ?? environment.resource.licenses,
+            mobilizationCost: param.mobilizationCost ?? environment.resource.mobilizationCost,
+            parking: param.parking ?? environment.resource.parking,
+            transportation: param.transportation ?? environment.resource.transportation,
         }
     }
 }

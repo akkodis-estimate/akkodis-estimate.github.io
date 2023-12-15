@@ -14,8 +14,8 @@ import {FetchClientsUseCase} from "../domain/usecases/client-usescases/fetch-cli
 import {IProjectInteractor} from "./interactors/contracts/iproject.interactor";
 import {ProjectInteractor} from "./interactors/implementations/project.interactor";
 import {ProjectRepository} from "./datasources/remote/firebase/project/project.repository";
-import {CreateProjectUseCase} from "../domain/usecases/project-usecases/create-project-usecase/create-project.usecase";
-import {FetchProjectsUseCase} from "../domain/usecases/project-usecases/fetch-projects-usecase/fetch-projects.usecase";
+import {CreateProjectUseCase} from "../domain/usecases/project-usecases/create-project.usecase";
+import {FetchProjectsUseCase} from "../domain/usecases/project-usecases/fetch-projects.usecase";
 import {IResourceInteractor} from "./interactors/contracts/iresource.interactor";
 import {ResourceInteractor} from "./interactors/implementations/resource.interactor";
 import {ResourceRepository} from "./datasources/remote/firebase/resource/resource.repository";
@@ -46,15 +46,15 @@ import {DeleteClientUseCase} from "../domain/usecases/client-usescases/delete-cl
 import {UpdateClientUseCase} from "../domain/usecases/client-usescases/update-client-usecase/update-client.usecase";
 import {DeleteAccountUseCase} from "../domain/usecases/account-usescases/delete-account-usecase/delete-account.usecase";
 import {UpdateAccountUseCase} from "../domain/usecases/account-usescases/update-account-usecase/update-account.usecase";
-import {DeleteProjectUseCase} from "../domain/usecases/project-usecases/delete-project-usecase/delete-project.usecase";
-import {UpdateProjectUseCase} from "../domain/usecases/project-usecases/update-project-usecase/update-project.usecase";
+import {DeleteProjectUseCase} from "../domain/usecases/project-usecases/delete-project.usecase";
+import {UpdateProjectUseCase} from "../domain/usecases/project-usecases/update-project.usecase";
 import {
     DeleteResourceUseCase
 } from "../domain/usecases/resource-usecases/delete-resource-usecase/delete-resource.usecase";
 import {
     UpdateResourceUseCase
 } from "../domain/usecases/resource-usecases/update-resource-usecase/update-resource.usecase";
-import {FetchProjectUseCase} from "../domain/usecases/project-usecases/fetch-project-usecase/fetch-project.usecase";
+import {FetchProjectUseCase} from "../domain/usecases/project-usecases/fetch-project.usecase";
 import {
     DeleteCurrencyExchangeUseCase
 } from "../domain/usecases/currency-exchange-usecases/delete-currency-exchange.usecase";

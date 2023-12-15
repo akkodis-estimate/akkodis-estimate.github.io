@@ -45,6 +45,9 @@ export class ResourcesComponent implements OnInit {
     private editResourceModalReference!: NgbModalRef;
     selectedResource!: ResourceResponse | undefined;
     editPrice: string = "";
+    editRiskProvision: boolean = false;
+    editMargin: boolean = false;
+    selectedResourceType!: ResourceTypeEnum;
 
     constructor(private localStorageService: LocalStorageService,
                 private toastr: ToastrService,
@@ -96,7 +99,7 @@ export class ResourcesComponent implements OnInit {
         return new FormGroup({
             jobTitle: new FormControl(resource.jobTitle ? resource.jobTitle : "", [Validators.required]),
             resourceType: new FormControl(resource.resourceType ? resource.resourceType : "", [Validators.required]),
-            workload: new FormControl(resource && resource.workload ? resource.workload : ""),
+            workload: new FormControl(resource && resource.workload ? resource.workload : 1),
 
             basicSalaryPeriod: new FormControl(resource.basicSalary ? AmountHelper.getAmountPeriod(resource.basicSalary) : 'MONTHLY'),
             basicSalaryCurrency: new FormControl(resource.basicSalary ? AmountHelper.getAmountCurrency(resource.basicSalary) : 'AED'),
@@ -137,6 +140,18 @@ export class ResourcesComponent implements OnInit {
             licensesPeriod: new FormControl(resource.licenses ? AmountHelper.getAmountPeriod(resource.licenses) : 'ANNUALLY'),
             licensesCurrency: new FormControl(AmountHelper.getAmountCurrency(resource.licenses!)),
             licenses: new FormControl(resource.licenses ? AmountHelper.getAmount(resource.licenses) : '400'),
+
+            mobilizationCostPeriod: new FormControl(resource.mobilizationCost ? AmountHelper.getAmountPeriod(resource.mobilizationCost) : 'ANNUALLY'),
+            mobilizationCostCurrency: new FormControl(AmountHelper.getAmountCurrency(resource.mobilizationCost!)),
+            mobilizationCost: new FormControl(resource.mobilizationCost ? AmountHelper.getAmount(resource.mobilizationCost) : '3500'),
+
+            parkingPeriod: new FormControl(resource.parking ? AmountHelper.getAmountPeriod(resource.parking) : 'ANNUALLY'),
+            parkingCurrency: new FormControl(AmountHelper.getAmountCurrency(resource.parking!)),
+            parking: new FormControl(resource.parking ? AmountHelper.getAmount(resource.parking) : '0'),
+
+            transportationPeriod: new FormControl(resource.transportation ? AmountHelper.getAmountPeriod(resource.transportation) : 'ANNUALLY'),
+            transportationCurrency: new FormControl(AmountHelper.getAmountCurrency(resource.transportation!)),
+            transportation: new FormControl(resource.transportation ? AmountHelper.getAmount(resource.transportation) : '0'),
         });
     }
 
@@ -220,6 +235,9 @@ export class ResourcesComponent implements OnInit {
                 generalSupportPackage: this.resourceForm.value.generalSupportPackagePeriod + " " + this.resourceForm.value.generalSupportPackageCurrency + " " + this.resourceForm.value.generalSupportPackage,
                 laptopWorkstation: this.resourceForm.value.laptopWorkstationPeriod + " " + this.resourceForm.value.laptopWorkstationCurrency + " " + this.resourceForm.value.laptopWorkstation,
                 licenses: this.resourceForm.value.licensesPeriod + " " + this.resourceForm.value.licensesCurrency + " " + this.resourceForm.value.licenses,
+                mobilizationCost: this.resourceForm.value.mobilizationCostPeriod + " " + this.resourceForm.value.mobilizationCostCurrency + " " + this.resourceForm.value.mobilizationCost,
+                parking: this.resourceForm.value.parkingPeriod + " " + this.resourceForm.value.parkingCurrency + " " + this.resourceForm.value.parking,
+                transportation: this.resourceForm.value.transportationPeriod + " " + this.resourceForm.value.transportationCurrency + " " + this.resourceForm.value.transportation,
             };
 
             if (this.selectedResource && this.selectedResource.id) {
@@ -296,6 +314,15 @@ export class ResourcesComponent implements OnInit {
             licensesPeriod: this.resourceForm.value.licensesPeriod,
             licensesCurrency: this.resourceForm.value.licensesCurrency,
             licenses: this.resourceForm.value.licenses,
+            mobilizationCostPeriod: this.resourceForm.value.mobilizationCostPeriod,
+            mobilizationCostCurrency: this.resourceForm.value.mobilizationCostCurrency,
+            mobilizationCost: this.resourceForm.value.mobilizationCost,
+            parkingPeriod: this.resourceForm.value.parkingPeriod,
+            parkingCurrency: this.resourceForm.value.parkingCurrency,
+            parking: this.resourceForm.value.parking,
+            transportationPeriod: this.resourceForm.value.transportationPeriod,
+            transportationCurrency: this.resourceForm.value.transportationCurrency,
+            transportation: this.resourceForm.value.transportation,
         };
         this.resourceForm.setValue(this.inputs);
     }
@@ -464,15 +491,6 @@ export class ResourcesComponent implements OnInit {
         this.onSubmit();
     }
 
-    onClickEditPrice(amount: number | undefined, currency: CurrencyEnum, period: PeriodEnum) {
-        // this.editPrice = true;
-        // this.pricesForm = new FormGroup({
-        //     period: new FormControl(period),
-        //     currency: new FormControl(currency),
-        //     amount: new FormControl(amount),
-        // });
-    }
-
     onMouseLeaveEditPrice() {
         this.editPrice = "";
         this.pricesForm.reset();
@@ -490,6 +508,28 @@ export class ResourcesComponent implements OnInit {
             amount: new FormControl(amount),
         });
     }
+
+    onMouseEnterEditRiskProvision() {
+        this.editRiskProvision = true;
+    }
+
+    onMouseLeaveEditRiskProvision() {
+        this.editRiskProvision = false;
+    }
+
+    onMouseEnterEditMargin() {
+        this.editMargin = true;
+    }
+
+    onMouseLeaveEditMargin() {
+        this.editMargin = false;
+    }
+
+    onChangeResourceType() {
+        this.selectedResourceType = this.resourceForm.value.resourceType;
+    }
+
+    protected readonly ResourceTypeEnum = ResourceTypeEnum;
 }
 
 export interface ResourceInputs {
@@ -526,6 +566,15 @@ export interface ResourceInputs {
     licensesPeriod?: PeriodEnum,
     licensesCurrency?: CurrencyEnum,
     licenses?: number;
+    mobilizationCostPeriod?: PeriodEnum,
+    mobilizationCostCurrency?: CurrencyEnum,
+    mobilizationCost?: number;
+    parkingPeriod?: PeriodEnum,
+    parkingCurrency?: CurrencyEnum,
+    parking?: number;
+    transportationPeriod?: PeriodEnum,
+    transportationCurrency?: CurrencyEnum,
+    transportation?: number;
 }
 
 export interface DisplayInputs {

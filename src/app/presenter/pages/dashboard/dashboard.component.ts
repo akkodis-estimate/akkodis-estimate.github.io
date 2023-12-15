@@ -159,17 +159,15 @@ export class DashboardComponent implements OnInit {
         this.localStorageService.delete(variables.project);
     }
 
-    onClickDeleteProject() {
+    onClickDeleteProjectAndResources() {
         let project = this.localStorageService.get(variables.project);
         if (project && project.id) {
-            this.projectInteractor.delete(project.id!).subscribe({
-                next: value => {
-                    this.localStorageService.delete(variables.project);
-                    this.toastr.success("Project deleted successfully", "Delete project");
+            this.resourceInteractor.fetchByProject(project.id).subscribe({
+                next: resources => {
+                    resources.data?.forEach(value => this.resourceInteractor.delete(value.id!));
+                    this.deleteProject(project.id);
                 },
                 error: err => {
-                    this.localStorageService.delete(variables.project);
-                    this.toastr.error("Error occurred while deleting the project", "Delete project");
                 },
                 complete: () => {
                 }
@@ -178,6 +176,22 @@ export class DashboardComponent implements OnInit {
             this.localStorageService.delete(variables.project);
             this.toastr.error("Project not found", "Delete project");
         }
+    }
+
+    deleteProject(id: string) {
+        this.projectInteractor.delete(id).subscribe({
+            next: value => {
+                this.localStorageService.delete(variables.project);
+                this.toastr.success("Project deleted successfully", "Delete project");
+                this.fetchProjects();
+            },
+            error: err => {
+                this.localStorageService.delete(variables.project);
+                this.toastr.error("Error occurred while deleting the project", "Delete project");
+            },
+            complete: () => {
+            }
+        });
     }
 
     fetchResources(projectId: string) {

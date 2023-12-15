@@ -78,7 +78,10 @@ export class AmountHelper {
             cost += AmountHelper.calculateAttributeAnnualCost(resource.generalSupportPackage!);
             cost += AmountHelper.calculateAttributeAnnualCost(resource.laptopWorkstation!);
             cost += AmountHelper.calculateAttributeAnnualCost(resource.licenses!);
-            cost = cost * (resource.workload! ?? 1);
+            cost += AmountHelper.calculateAttributeAnnualCost(resource.mobilizationCost!);
+            cost += AmountHelper.calculateAttributeAnnualCost(resource.parking!);
+            cost += AmountHelper.calculateAttributeAnnualCost(resource.transportation!);
+            cost = cost * (resource.workload ? resource.workload : 1);
         });
         return cost;
     }
@@ -120,5 +123,22 @@ export class AmountHelper {
             }
         });
         return rate;
+    }
+
+    static getFirstLetterOfPeriod(period: string | PeriodEnum): string {
+        switch (period) {
+            case PeriodEnum.Annually:
+                return "Y";
+            case PeriodEnum.Monthly:
+                return "M";
+            case PeriodEnum.Weekly:
+                return "W";
+            case PeriodEnum.Daily:
+                return "D";
+            case PeriodEnum.Hourly:
+                return "H";
+            default:
+                return "";
+        }
     }
 }

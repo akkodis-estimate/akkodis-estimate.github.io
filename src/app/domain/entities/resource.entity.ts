@@ -16,4 +16,7 @@ export interface ResourceEntity extends Entity {
     generalSupportPackage?: string;
     laptopWorkstation?: string;
     licenses?: string;
+    mobilizationCost?: string;
+    parking?: string;
+    transportation?: string;
 }

@@ -16,4 +16,7 @@ export interface ResourceResponse extends Response {
     generalSupportPackage?: string;
     laptopWorkstation?: string;
     licenses?: string;
+    mobilizationCost?: string;
+    parking?: string;
+    transportation?: string;
 }
