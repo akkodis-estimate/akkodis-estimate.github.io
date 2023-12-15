@@ -19,12 +19,15 @@
                 <li class="pointer" style="background-color: yellow">
                     <a (click)="onClickSignOut()"><i class="fa fa-sign-out"></i> <span>Sign out</span></a>
                 </li>
-                <li class="pointer m-3">
+                <li class="pointer m-3" style="font-size: xx-small;">
                     <img class=""
                          width="50"
                          src="assets/images/akkodis.png"
                          alt="akkodis">
-                    <span style="font-size: xx-small;">Version : <b class="text-danger"> 0.1.0</b></span>
+                    <strong>
+                        © <span style="color: #000;"> {{year}} <br>Version : </span>
+                    </strong>
+                    <strong style="color:#F00;">{{version}}</strong>
                 </li>
             </ul>
         </div>
