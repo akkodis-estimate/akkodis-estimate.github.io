@@ -2,12 +2,18 @@
     <div class="col-12 col-md-12 col-lg-12 col-xl-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title d-inline-block"><b>{{accounts?.length}}</b> Accounts </h4>
-                <button class="btn btn-outline-primary float-right"
-                        (click)="open(editAccountModal)">Add
-                </button>
+                <div class="row">
+                    <div class="col">
+                        <h4 class="card-title d-inline-block"><b>{{accounts?.length}}</b> Users </h4>
+                    </div>
+                    <div class="col-2 col-sm-2 col-md-1 col-lg-1 col-xl-1">
+                        <!--                        <button class="btn btn-outline-primary float-right"-->
+                        <!--                                (click)="open(editAccountModal)">Add-->
+                        <!--                        </button>-->
+                    </div>
+                </div>
             </div>
-            <div class="card-block">
+            <div class="card-block m-1">
                 <div class="table-responsive">
                     <table class="table mb-0 new-patient-table table-hover">
                         <thead>
@@ -16,10 +22,9 @@
                             <th>Lastname<span style="color: red;">*</span></th>
                             <th>Email<span style="color: red;">*</span></th>
                             <th>Role<span style="color: red;">*</span></th>
+                            <!--                            <th>Phone number</th>-->
+                            <!--                            <th>Address</th>-->
                             <th></th>
-                            <th>Phone number</th>
-                            <th>Address</th>
-                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -56,45 +61,52 @@
                                 </form>
                             </td>
                             <td>
-                                <img class="aspect-square" *ngIf="accountForm.valid" (click)="onSubmit()"
-                                     src="assets/images/save.png"
-                                     alt="save"
-                                     data-bs-toggle="tooltip"
-                                     data-bs-placement="top"
-                                     title="save">
+                                <button type="button" class="btn btn-outline-success btn-sm"
+                                        *ngIf="accountForm.valid"
+                                        (click)="onSubmit()">
+                                    Save
+                                </button>
                             </td>
-                            <td>
-                                <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
-                                    <input type="tel"
-                                           formControlName="phoneNumber"
-                                           placeholder="Phone number">
-                                </form>
-                            </td>
-                            <td>
-                                <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
-                                    <input type="text"
-                                           formControlName="address"
-                                           placeholder="Address">
-                                </form>
-                            </td>
-                            <td></td>
                         </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="m-3"></div>
+                <div class="table-responsive">
+                    <table class="table mb-0 new-patient-table table-hover">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Firstname</th>
+                            <th>Lastname</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Phone number</th>
+                            <th>Address</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
 
                         <tr *ngFor="let account of accounts">
                             <td (click)="openEditAccountModal(account, editAccountModal)">
                                 <div class="row">
-                                    <div class="col-5 col-sm-5 col-md-4 col-lg-3 col-xl-3">
+                                    <div class="col">
                                         <img width="28" height="28" class="rounded-circle m-r-5"
                                              src="assets/images/user.jpg"
                                              alt="">
                                     </div>
+                                </div>
+                            </td>
+                            <td (click)="openEditAccountModal(account, editAccountModal)">
+                                <div class="row">
                                     <div class="col"><h2>{{account.firstname}}</h2></div>
                                 </div>
                             </td>
                             <td (click)="openEditAccountModal(account, editAccountModal)">{{account.lastname}}</td>
                             <td (click)="openEditAccountModal(account, editAccountModal)">{{account.email}}</td>
                             <td (click)="openEditAccountModal(account, editAccountModal)">{{account.role}}</td>
-                            <td></td>
                             <td (click)="openEditAccountModal(account, editAccountModal)">{{account.phoneNumber}}</td>
                             <td (click)="openEditAccountModal(account, editAccountModal)">{{account.address}}</td>
                             <td>
