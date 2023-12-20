@@ -15,6 +15,7 @@ export class SidebarComponent {
     public version: string = packageJson.version;
 
     constructor(private router: Router, private localStorageService: LocalStorageService) {
+        this.isSection("");
     }
 
     onClickMenu(menu: string) {
@@ -25,5 +26,9 @@ export class SidebarComponent {
     onClickSignOut() {
         this.localStorageService.clear();
         this.router.navigate(["login"]);
+    }
+
+    isSection(menu: string): boolean {
+        return window.location.hash.includes(menu);
     }
 }

@@ -2,13 +2,17 @@
     <div class="col-12 col-md-12 col-lg-12 col-xl-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title d-inline-block"><b
-                    *ngIf="clients">{{clients.length}}</b> Clients </h4>
-                <button class="btn btn-outline-primary float-right"
-                        (click)="open(editClientModal)">Add
-                </button>
+                <div class="row">
+                    <div class="col">
+                        <h4 class="card-title d-inline-block"><b
+                            *ngIf="clients">{{clients.length}}</b> Clients
+                        </h4>
+                    </div>
+                    <div class="col-2 col-sm-2 col-md-1 col-lg-1 col-xl-1">
+                    </div>
+                </div>
             </div>
-            <div class="card-block">
+            <div class="card-block m-1">
                 <div class="table-responsive">
                     <table class="table mb-0 new-patient-table table-hover">
                         <thead>
@@ -16,7 +20,7 @@
                             <th>Company name<span style="color: red;">*</span></th>
                             <th>Email</th>
                             <th>Phone number</th>
-                            <th>Address</th>
+                            <th>Location</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -51,19 +55,35 @@
                                 <form [formGroup]="clientForm" (ngSubmit)="onSubmit()" novalidate class="form-signin">
                                     <input type="text"
                                            formControlName="address"
-                                           placeholder="Address"
+                                           placeholder="Location"
                                            id="address">
                                 </form>
                             </td>
                             <td>
-                                <img class="aspect-square" *ngIf="clientForm.valid" (click)="onSubmit()"
-                                     src="assets/images/save.png"
-                                     alt="save"
-                                     data-bs-toggle="tooltip"
-                                     data-bs-placement="top"
-                                     title="save">
+                                <button type="button" class="btn btn-outline-success btn-sm"
+                                        *ngIf="clientForm.valid"
+                                        (click)="onSubmit()">
+                                    Save
+                                </button>
                             </td>
                         </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="m-3"></div>
+                <div class="table-responsive">
+                    <table class="table mb-0 new-patient-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Company name</th>
+                            <th>Email</th>
+                            <th>Phone number</th>
+                            <th>Location</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
 
                         <tr *ngFor="let client of clients">
                             <td (click)="openEditClientModal(client, editClientModal)">
