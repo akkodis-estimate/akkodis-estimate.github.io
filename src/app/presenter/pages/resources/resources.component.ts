@@ -51,6 +51,7 @@ export class ResourcesComponent implements OnInit {
     editRiskProvision: boolean = false;
     editMargin: boolean = false;
     selectedResourceType!: ResourceTypeEnum;
+    colspan: number = 1;
 
     constructor(private localStorageService: LocalStorageService,
                 private toastr: ToastrService,
@@ -226,7 +227,7 @@ export class ResourcesComponent implements OnInit {
 
     calculateMargin(price: number, currency: CurrencyEnum, period: PeriodEnum) {
         let annualCost: number = AmountHelper.calculateTotalAnnualCost(this.resources, this.workingDays);
-        let convertedPrice = AmountHelper.convertAmountFromCurrencyToCurrency(price, currency + "/AED", this.currencyExchanges);
+        let convertedPrice = AmountHelper.convertAmountFromCurrencyToCurrency(price, currency, CurrencyEnum.AED, this.currencyExchanges);
         let annualPrice: number = AmountHelper.convertToAnnualAmount(convertedPrice ?? 0, period);
         return ((annualPrice / ((1 + (this.project.riskProvision! / 100)) * annualCost)) - 1) * 100;
     }
@@ -557,6 +558,10 @@ export class ResourcesComponent implements OnInit {
     }
 
     protected readonly ResourceTypeEnum = ResourceTypeEnum;
+
+    onChangeMarginUnit(event: any) {
+        console.log(event.target.value);
+    }
 }
 
 export interface ResourceInputs {

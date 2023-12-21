@@ -4,13 +4,20 @@
             <div class="accordion accordion-flush m-1" id="currencyExchangesAccordion">
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-
                         <div class="row">
                             <div class="col-1 pointer align-self-center m-l-5" (click)="onClickBack()">
                                 <img src="assets/images/arrow-left.png" class="float-left">
                             </div>
                             <div class="col align-self-center">
-                                <h4 class="card-title"><b>{{project.title | uppercase}}</b></h4>
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="card-title"><b>{{project.title | uppercase}}</b></h4>
+                                    </div>
+                                    <div class="col-3 col-sm-3 col-md-2 col-lg-2 col-xl-1 align-self-center">
+                                        <p style="font-size: x-small"><b>{{project.duration}}</b> months</p>
+                                    </div>
+                                    <div class="col-12"><p style="font-size: xx-small">{{project.description}}</p></div>
+                                </div>
                             </div>
                             <div class="col-2">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -275,7 +282,7 @@
     </div>
 </div>
 
-<div class="row" *ngIf="resources && resources.length > 0">
+<div class="row" *ngIf="resources && resources.length > 0 && workingDays">
     <div class="col-12">
         <div class="card">
             <div class="card-header">
@@ -305,72 +312,27 @@
                     <table class="table mb-0 new-patient-table table-hover">
                         <thead>
                         <tr>
-                            <th><h4>Costs</h4></th>
-                            <th *ngFor="let currency of displayCurrencies">{{currency}}</th>
+                            <th><h4>Period</h4></th>
+                            <th [attr.colspan]="displayCurrencies.length"><h4>Costs</h4></th>
+                            <th [attr.colspan]="displayCurrencies.length"><h4>Price</h4></th>
+                            <th><h4>Margin</h4></th>
+                            <th><h4>Risk provision</h4></th>
                         </tr>
                         </thead>
                         <tbody>
-
-                        <tr *ngFor="let period of displayPeriods">
-                            <td><h2>{{period}}</h2></td>
-                            <td *ngFor="let currency of displayCurrencies">
-                                <h2>{{calculateCurrencyPeriodCost(currency, period) | amount}}</h2></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="row m-2">
-                    <div class="col">
-                        <label for="margin">Margin (%)</label>
-                        <div (mouseenter)="onMouseEnterEditMargin()"
-                             (mouseleave)="onMouseLeaveEditMargin()">
-                            <div *ngIf="!editMargin">
-                                <b>{{project.margin | amount}}%</b>
-                            </div>
-                            <form [formGroup]="projectForm" (ngSubmit)="onSubmitProject()"
-                                  novalidate class="form-signin" *ngIf="editMargin">
-                                <input type="number"
-                                       class="form-control"
-                                       formControlName="margin"
-                                       placeholder="margin"
-                                       id="margin">
-                            </form>
-                        </div>
-
-                    </div>
-                    <div class="col">
-                        <label for="riskProvision">Risk provision (%)</label>
-                        <div (mouseenter)="onMouseEnterEditRiskProvision()"
-                             (mouseleave)="onMouseLeaveEditRiskProvision()">
-                            <div *ngIf="!editRiskProvision">
-                                <b>{{project.riskProvision | amount}}%</b>
-                            </div>
-
-                            <form [formGroup]="projectForm" (ngSubmit)="onSubmitProject()" novalidate
-                                  class="form-signin" *ngIf="editRiskProvision">
-                                <input type="number"
-                                       class="form-control"
-                                       formControlName="riskProvision"
-                                       placeholder="Risk provision"
-                                       id="riskProvision">
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="table-responsive scrollmenu m-3">
-                    <table class="table mb-0 new-patient-table table-hover">
-                        <thead>
                         <tr>
-                            <th><h4>Prices</h4></th>
-                            <th *ngFor="let currency of displayCurrencies">{{currency}}</th>
+                            <td></td>
+                            <td *ngFor="let currency of displayCurrencies">{{currency}}</td>
+                            <td *ngFor="let currency of displayCurrencies">{{currency}}</td>
+                            <td>%</td>
+                            <td>%</td>
                         </tr>
-                        </thead>
-                        <tbody>
 
                         <tr *ngFor="let period of displayPeriods ; let i = index">
                             <td><h2>{{period}}</h2></td>
+                            <td *ngFor="let currency of displayCurrencies">
+                                <h2>{{calculateCurrencyPeriodCost(currency, period) | amount}}</h2>
+                            </td>
                             <td *ngFor="let currency of displayCurrencies ; let j = index"
                                 (mouseleave)="onMouseLeaveEditPrice()"
                                 (mouseenter)="onMouseEnterEditPrice(calculateCurrencyPeriodPrice(currency, period), currency, period, i, j)">
@@ -383,6 +345,39 @@
                                            formControlName="amount"
                                            class="form-control"
                                            placeholder="{{calculateCurrencyPeriodPrice(currency, period)}}">
+                                </div>
+                            </td>
+                            <td>
+                                <div (mouseenter)="onMouseEnterEditMargin()"
+                                     (mouseleave)="onMouseLeaveEditMargin()">
+                                    <div *ngIf="!editMargin">
+                                        <b>{{project.margin | amount}}</b>
+                                    </div>
+                                    <form [formGroup]="projectForm" (ngSubmit)="onSubmitProject()"
+                                          novalidate class="form-signin" *ngIf="editMargin">
+                                        <input type="number"
+                                               class="form-control"
+                                               formControlName="margin"
+                                               placeholder="margin"
+                                               id="margin">
+                                    </form>
+                                </div>
+                            </td>
+                            <td>
+                                <div (mouseenter)="onMouseEnterEditRiskProvision()"
+                                     (mouseleave)="onMouseLeaveEditRiskProvision()">
+                                    <div *ngIf="!editRiskProvision">
+                                        <b>{{project.riskProvision | amount}}</b>
+                                    </div>
+
+                                    <form [formGroup]="projectForm" (ngSubmit)="onSubmitProject()" novalidate
+                                          class="form-signin" *ngIf="editRiskProvision">
+                                        <input type="number"
+                                               class="form-control"
+                                               formControlName="riskProvision"
+                                               placeholder="Risk provision"
+                                               id="riskProvision">
+                                    </form>
                                 </div>
                             </td>
                         </tr>

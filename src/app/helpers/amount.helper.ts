@@ -93,15 +93,14 @@ export class AmountHelper {
         return rate ? amount * rate : undefined;
     }
 
-    static convertAmountFromCurrencyToCurrency(amount: number, coupleOfCurrencies: string, currencyExchanges: CurrencyExchangeResponse[]): number | undefined {
-        let currencies: string[] = coupleOfCurrencies.split("/");
-        let rate = this.getRateFromGivenCurrencies(currencies[0], currencies[1], currencyExchanges);
+    static convertAmountFromCurrencyToCurrency(amount: number, currency1: string, currency2: string, currencyExchanges: CurrencyExchangeResponse[]): number | undefined {
+        let rate = this.getRateFromGivenCurrencies(currency1, currency2, currencyExchanges);
         return rate ? amount * rate : undefined;
     }
 
     static getRateFromGivenCurrencies(currency1: string, currency2: string, currencyExchanges: CurrencyExchangeResponse[]): number | undefined {
         let rate: number | undefined;
-        if (currency1 == currency1) {
+        if (currency1 == currency2) {
             return 1;
         }
         currencyExchanges.forEach(value => {
