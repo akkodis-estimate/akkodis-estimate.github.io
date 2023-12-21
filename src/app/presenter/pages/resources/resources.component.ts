@@ -117,6 +117,7 @@ export class ResourcesComponent implements OnInit {
             jobTitle: new FormControl(resource.jobTitle ? resource.jobTitle : "", [Validators.required]),
             resourceType: new FormControl(resource.resourceType ? resource.resourceType : "", [Validators.required]),
             workload: new FormControl(resource && resource.workload ? resource.workload : 1),
+            quantity: new FormControl(resource && resource.quantity ? resource.quantity : 1),
 
             basicSalaryPeriod: new FormControl(resource.basicSalary ? AmountHelper.getAmountPeriod(resource.basicSalary) : 'MONTHLY'),
             basicSalaryCurrency: new FormControl(resource.basicSalary ? AmountHelper.getAmountCurrency(resource.basicSalary) : 'AED'),
@@ -235,12 +236,21 @@ export class ResourcesComponent implements OnInit {
         return AmountHelper.convertAmountToCurrency(amount, currency, this.currencyExchanges);
     }
 
+    calculateResourceQuantity(): number {
+        let quantity: number = 0;
+        this.resources.forEach(value => {
+            quantity += value.quantity ?? 1;
+        });
+        return quantity;
+    }
+
     onSubmit() {
         if (this.resourceForm.valid) {
             let request: ResourceRequest = {
                 jobTitle: this.resourceForm.value.jobTitle,
                 resourceType: this.resourceForm.value.resourceType,
                 workload: this.resourceForm.value.workload,
+                quantity: this.resourceForm.value.quantity,
                 project: this.project.id,
                 basicSalary: this.resourceForm.value.basicSalaryPeriod + " " + this.resourceForm.value.basicSalaryCurrency + " " + this.resourceForm.value.basicSalary,
                 allowance: this.resourceForm.value.allowancePeriod + " " + this.resourceForm.value.allowanceCurrency + " " + this.resourceForm.value.allowance,
@@ -553,6 +563,7 @@ export interface ResourceInputs {
     jobTitle?: string;
     resourceType?: ResourceTypeEnum;
     workload?: number;
+    quantity?: number;
     basicSalaryPeriod?: PeriodEnum,
     basicSalaryCurrency?: CurrencyEnum,
     basicSalary?: number;

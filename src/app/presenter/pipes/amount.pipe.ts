@@ -8,8 +8,8 @@ export class AmountPipe implements PipeTransform {
     transform(value?: number): string {
         if (Number.isFinite(value)) {
             const options = {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
             };
             value = value ? value : 0;
             return Number(value).toLocaleString('en', options);

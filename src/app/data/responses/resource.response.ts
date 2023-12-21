@@ -5,6 +5,7 @@ export interface ResourceResponse extends Response {
     jobTitle?: string;
     resourceType?: ResourceTypeEnum;
     workload?: number;
+    quantity?: number;
     project?: string;
     basicSalary?: string;
     allowance?: string;

@@ -5,6 +5,7 @@ export interface ResourceEntity extends Entity {
     jobTitle?: string;
     resourceType?: ResourceTypeEnum;
     workload?: number;
+    quantity?: number;
     project?: string;
     basicSalary?: string;
     allowance?: string;
