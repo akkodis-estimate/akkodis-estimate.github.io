@@ -4,6 +4,7 @@ export interface ResourceRequest {
     jobTitle?: string;
     resourceType?: ResourceTypeEnum;
     workload?: number;
+    quantity?: number;
     project?: string;
     basicSalary?: string;
     allowance?: string;

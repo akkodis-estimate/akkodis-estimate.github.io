@@ -3,17 +3,17 @@
         <div id="sidebar-menu" class="sidebar-menu">
             <ul>
                 <li class="menu-title"></li>
-                <li class="pointer" [ngClass]="menu == 'dashboard' ? 'active' : ''">
+                <li class="pointer" [ngClass]="isSection('dashboard') || isSection('resources') ? 'active' : ''">
                     <a (click)="onClickMenu('dashboard')"><i class="fa fa-dashboard"></i>
                         <span>Projects</span></a>
                 </li>
-                <li class="pointer" [ngClass]="menu == 'clients' ? 'active' : ''">
+                <li class="pointer" [ngClass]="isSection('clients') ? 'active' : ''">
                     <a (click)="onClickMenu('clients')"><i class="fa fa-user-md"></i> <span>Clients</span></a>
                 </li>
-                <li class="pointer" [ngClass]="menu == 'accounts' ? 'active' : ''">
-                    <a (click)="onClickMenu('accounts')"><i class="fa fa-users"></i> <span>Accounts</span></a>
+                <li class="pointer" [ngClass]="isSection('users') ? 'active' : ''">
+                    <a (click)="onClickMenu('users')"><i class="fa fa-users"></i> <span>Users</span></a>
                 </li>
-                <li class="pointer" [ngClass]="menu == 'settings' ? 'active' : ''">
+                <li class="pointer" [ngClass]="isSection('settings') ? 'active' : ''">
                     <a (click)="onClickMenu('settings')"><i class="fa fa-cog"></i> <span>Settings</span></a>
                 </li>
                 <li class="pointer" style="background-color: yellow">

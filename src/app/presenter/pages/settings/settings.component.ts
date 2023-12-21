@@ -28,6 +28,8 @@ export class SettingsComponent implements OnInit {
     workingDaysForm: FormGroup;
     languageForm: FormGroup;
 
+    panels = ['First', 'Second', 'Third'];
+
     constructor(private currencyExchangeInteractor: CurrencyExchangeInteractor,
                 private workingDaysInteractor: WorkingDaysInteractor,
                 private localStorageService: LocalStorageService,

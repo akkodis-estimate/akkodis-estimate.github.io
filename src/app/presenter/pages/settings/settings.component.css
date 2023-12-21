@@ -9,3 +9,12 @@ tr img.action {
 tr:hover img.action {
     display: inline-block;
 }
+
+tr button.action {
+    display: none;
+}
+
+tr:hover button.action {
+    display: inline-block;
+}
+

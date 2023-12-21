@@ -33,7 +33,7 @@ import {ClientsComponent} from './presenter/pages/clients/clients.component';
 import {SettingsComponent} from './presenter/pages/settings/settings.component';
 import {ResourcesComponent} from './presenter/pages/resources/resources.component';
 import {AccountsComponent} from './presenter/pages/accounts/accounts.component';
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {NgbAccordionModule, NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {AmountPipe} from './presenter/pipes/amount.pipe';
 import {AmountComponent} from './presenter/components/amount/amount.component';
 import {HashLocationStrategy, LocationStrategy} from "@angular/common";
@@ -67,7 +67,8 @@ import {HashLocationStrategy, LocationStrategy} from "@angular/common";
         AngularFirestoreModule,
         AngularFireStorageModule,
         ToastrModule.forRoot(),
-        NgbModule
+        NgbModule,
+        NgbAccordionModule
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
