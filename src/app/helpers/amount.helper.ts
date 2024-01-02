@@ -149,4 +149,9 @@ export class AmountHelper {
             - workingDays.paidLeave
             - workingDays.publicHolidays;
     }
+
+    static calculateCurrencyPeriodCost(resources: ResourceResponse[], workingDays: WorkingDaysResponse, currencyExchanges: CurrencyExchangeResponse[], currency: CurrencyEnum, period: PeriodEnum): number | undefined {
+        let amount = AmountHelper.convertToAnnualAmount(AmountHelper.calculateTotalAnnualCost(resources, workingDays), period);
+        return AmountHelper.convertAmountToCurrency(amount, currency, currencyExchanges);
+    }
 }

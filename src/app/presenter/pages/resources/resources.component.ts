@@ -21,6 +21,8 @@ import {CurrencyExchangeInteractor} from "../../../data/interactors/implementati
 import {CurrencyExchangeResponse} from "../../../data/responses/currency-exchange.response";
 import {WorkingDaysInteractor} from "../../../data/interactors/implementations/working-days.interactor";
 import {WorkingDaysResponse} from "../../../data/responses/working-days.response";
+import {ExcelService} from "../../services/excel/excel.service";
+import {ExportData} from "../../../core/params/export-data";
 
 @Component({
     selector: 'app-resources',
@@ -57,6 +59,7 @@ export class ResourcesComponent implements OnInit {
                 private toastr: ToastrService,
                 private router: Router,
                 private modalService: NgbModal,
+                private excelService: ExcelService,
                 private currencyExchangeInteractor: CurrencyExchangeInteractor,
                 private workingDaysInteractor: WorkingDaysInteractor,
                 private clientInteractor: ClientInteractor,
@@ -217,8 +220,7 @@ export class ResourcesComponent implements OnInit {
     }
 
     calculateCurrencyPeriodCost(currency: CurrencyEnum, period: PeriodEnum): number | undefined {
-        let amount = AmountHelper.convertToAnnualAmount(AmountHelper.calculateTotalAnnualCost(this.resources, this.workingDays), period);
-        return AmountHelper.convertAmountToCurrency(amount, currency, this.currencyExchanges);
+        return AmountHelper.calculateCurrencyPeriodCost(this.resources, this.workingDays, this.currencyExchanges, currency, period);
     }
 
     calculateTotalAnnualPrice(): number {
@@ -559,8 +561,14 @@ export class ResourcesComponent implements OnInit {
 
     protected readonly ResourceTypeEnum = ResourceTypeEnum;
 
-    onChangeMarginUnit(event: any) {
-        console.log(event.target.value);
+    onClickProjectExport(): void {
+        let exportData: ExportData = {
+            project: this.project,
+            resources: this.resources,
+            cost: this.calculateCurrencyPeriodCost(CurrencyEnum.AED, PeriodEnum.Annually),
+            price: this.calculateTotalAnnualPrice(),
+        }
+        this.excelService.generateExcel(exportData, 'user_data');
     }
 }
 
