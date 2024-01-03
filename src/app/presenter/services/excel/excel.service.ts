@@ -18,10 +18,17 @@ export class ExcelService {
 
     generateExcel(exportData: ExportData, fileName: string): void {
         this.workbook = new ExcelJS.Workbook();
-        this.worksheet = this.workbook.addWorksheet('Sheet 1');
-        // Add headers
+        this.worksheet = this.workbook.addWorksheet('A.D.');
+
+        let row: any[] = [];
+        this.worksheet.addRow(["Project title", exportData.project?.title]);
+        this.worksheet.addRow(["Duration", exportData.project?.duration]);
+        // this.worksheet.addRow(["Client", exportData.project?.client]);
+        this.worksheet.addRow(["Description", exportData.project?.description]);
+        this.worksheet.addRow([]);
+
+        // Add resources headers
         const headers: string[] = Object.keys(this.resourceHeaders);
-        const resourceHeaderValues: string[] = Object.values(this.resourceHeaders);
         this.worksheet.addRow(["Period", "Description", "Amount in AED"]);
         // Add resources
         exportData.resources?.forEach((item) => {
@@ -37,7 +44,7 @@ export class ExcelService {
             });
         });
         this.worksheet.addRow([]);
-        let row: any[] = [];
+        row = [];
         row.push(PeriodEnum.Annually);
         row.push("Total cost");
         row.push(exportData.cost);
@@ -45,10 +52,19 @@ export class ExcelService {
 
         this.worksheet.addRow([]);
         row = [];
+        row.push("");
+        row.push("Margin %");
+        row.push(exportData.project?.margin);
+        this.worksheet.addRow(row);
+        this.saveExcelFile(fileName);
+
+        this.worksheet.addRow([]);
+        row = [];
         row.push(PeriodEnum.Annually);
         row.push("Total price");
         row.push(exportData.price);
         this.worksheet.addRow(row);
+
         this.saveExcelFile(fileName);
     }
 

@@ -568,7 +568,7 @@ export class ResourcesComponent implements OnInit {
             cost: this.calculateCurrencyPeriodCost(CurrencyEnum.AED, PeriodEnum.Annually),
             price: this.calculateTotalAnnualPrice(),
         }
-        this.excelService.generateExcel(exportData, 'user_data');
+        this.excelService.generateExcel(exportData, 'cost_sheet');
     }
 }
 
