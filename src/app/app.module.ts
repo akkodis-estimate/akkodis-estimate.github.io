@@ -37,6 +37,7 @@ import {NgbAccordionModule, NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {AmountPipe} from './presenter/pipes/amount.pipe';
 import {AmountComponent} from './presenter/components/amount/amount.component';
 import {HashLocationStrategy, LocationStrategy} from "@angular/common";
+import {ExcelService} from "./presenter/services/excel/excel.service";
 
 @NgModule({
     declarations: [
@@ -73,6 +74,7 @@ import {HashLocationStrategy, LocationStrategy} from "@angular/common";
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
         AmountPipe,
+        ExcelService,
         ...DATA_ACCOUNT_IOC,
         ...DATA_CLIENT_IOC,
         ...DATA_PROJECT_IOC,
