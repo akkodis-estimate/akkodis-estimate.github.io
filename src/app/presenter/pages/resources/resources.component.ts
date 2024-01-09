@@ -269,7 +269,6 @@ export class ResourcesComponent implements OnInit {
                 parking: this.resourceForm.value.parkingPeriod + " " + this.resourceForm.value.parkingCurrency + " " + this.resourceForm.value.parking,
                 transportation: this.resourceForm.value.transportationPeriod + " " + this.resourceForm.value.transportationCurrency + " " + this.resourceForm.value.transportation,
             };
-
             if (this.selectedResource && this.selectedResource.id) {
                 this.resourceInteractor.update(this.selectedResource.id!, request).subscribe({
                     next: value => {
@@ -317,8 +316,9 @@ export class ResourcesComponent implements OnInit {
             basicSalary: this.resourceForm.value.basicSalary,
             resourceType: this.resourceForm.value.resourceType,
             workload: this.resourceForm.value.workload,
-            allowancePeriod: this.resourceForm.value.allowancePeriod,
-            allowanceCurrency: this.resourceForm.value.allowanceCurrency,
+            quantity: this.resourceForm.value.quantity,
+            allowancePeriod: this.resourceForm.value.basicSalaryPeriod,
+            allowanceCurrency: this.resourceForm.value.basicSalaryCurrency,
             allowance: this.resourceForm.value.basicSalary,
             gratuityPeriod: this.resourceForm.value.gratuityPeriod,
             gratuityCurrency: this.resourceForm.value.gratuityCurrency,
@@ -357,6 +357,10 @@ export class ResourcesComponent implements OnInit {
         this.resourceForm.setValue(this.inputs);
     }
 
+    getClientById(id: string): ClientResponse | undefined {
+        return this.clients.find(client => client.id === id);
+    }
+
     onChangePeriod() {
         let request: DisplayInputs = {
             period: this.displayForm.value.period,
@@ -377,11 +381,15 @@ export class ResourcesComponent implements OnInit {
             currency: this.displayForm.value.currency,
         };
 
-        let indexCurrency: number = this.displayCurrencies.indexOf(request.currency!);
-        if (indexCurrency > -1) {
-            this.displayCurrencies.splice(indexCurrency, 1);
+        if (AmountHelper.getRateFromGivenCurrencies(request.currency!, CurrencyEnum.AED.toString(), this.currencyExchanges)) {
+            let indexCurrency: number = this.displayCurrencies.indexOf(request.currency!);
+            if (indexCurrency > -1) {
+                this.displayCurrencies.splice(indexCurrency, 1);
+            } else {
+                this.displayCurrencies.push(request.currency!);
+            }
         } else {
-            this.displayCurrencies.push(request.currency!);
+            this.toastr.error('No exchange for this currency. Please add currency exchange', 'Display Amount');
         }
     }
 

@@ -1,8 +1,8 @@
 import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
-import {UseCase} from "../../../../core/contracts/usecase.contract";
-import {IResourceRepository} from "../../../repositories/iresource.repository";
-import {ResourceEntity} from "../../../entities/resource.entity";
+import {UseCase} from "../../../core/contracts/usecase.contract";
+import {IResourceRepository} from "../../repositories/iresource.repository";
+import {ResourceEntity} from "../../entities/resource.entity";
 
 @Injectable({
     providedIn: 'root'

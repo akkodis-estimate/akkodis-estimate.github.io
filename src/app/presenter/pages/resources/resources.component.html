@@ -13,7 +13,11 @@
                                     <div class="col">
                                         <h4 class="card-title"><b>{{project.title | uppercase}}</b></h4>
                                     </div>
-                                    <div class="col-3 col-sm-3 col-md-2 col-lg-2 col-xl-1 align-self-center">
+                                    <div class="col">
+                                        <p style="font-size: medium">
+                                            <b>{{getClientById(project.client!)?.companyName}}</b></p>
+                                    </div>
+                                    <div class="col-3 col-sm-3 col-md-2 col-lg-2 col-xl-2 align-self-center">
                                         <p style="font-size: x-small"><b>{{project.duration}}</b> months</p>
                                     </div>
                                     <div class="col-12"><p style="font-size: xx-small">{{project.description}}</p></div>
@@ -23,6 +27,7 @@
                                 <img class="aspect-square action pointer"
                                      src="assets/images/export.png"
                                      alt="duplicate"
+                                     width="32"
                                      (click)="onClickProjectExport()"
                                      data-bs-toggle="tooltip"
                                      data-bs-placement="top"
@@ -83,13 +88,16 @@
                                                           formControlName="description"
                                                           placeholder="Description"
                                                           id="description">
-            </textarea>
+                                                </textarea>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
                                 <div class="col-12">
-                                    <button class="btn btn-outline-success float-right" (click)="onSubmitProject()">Save
+                                    <button class="btn btn-outline-success float-right" (click)="onSubmitProject()"
+                                            type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#currencyExchangesCollapse" aria-expanded="false"
+                                            aria-controls="currencyExchangesCollapse">Save
                                     </button>
                                 </div>
                             </div>
@@ -122,7 +130,7 @@
                                 Workload
                             </th>
                             <th>
-                                Nb resource
+                                Number resources
                             </th>
                             <th>Actions</th>
                         </tr>

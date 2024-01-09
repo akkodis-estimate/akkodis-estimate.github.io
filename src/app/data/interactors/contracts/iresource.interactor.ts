@@ -10,6 +10,8 @@ export abstract class IResourceInteractor {
 
     abstract fetchByProject(projectId: string): Observable<Result<ResourceResponse[]>>;
 
+    abstract countByProject(projectId: string): Observable<number>;
+
     abstract fetchOne(id: string): Observable<Result<ResourceResponse>>
 
     abstract create(request: ResourceRequest): Observable<Result<ResourceResponse>>;

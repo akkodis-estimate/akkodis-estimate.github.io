@@ -17,4 +17,6 @@ export abstract class IAccountInteractor {
     abstract update(id: string, request: AccountRequest): Observable<Result<AccountResponse>>;
 
     abstract delete(id: string): Observable<Result<AccountResponse>>;
+
+    abstract changePassword(id: string, newPassword: string): Observable<Result<AccountResponse>>;
 }

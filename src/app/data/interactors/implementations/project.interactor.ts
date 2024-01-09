@@ -12,13 +12,9 @@ import {FetchProjectsUseCase} from "../../../domain/usecases/project-usecases/fe
 import {DeleteProjectUseCase} from "../../../domain/usecases/project-usecases/delete-project.usecase";
 import {UpdateProjectUseCase} from "../../../domain/usecases/project-usecases/update-project.usecase";
 import {FetchProjectUseCase} from "../../../domain/usecases/project-usecases/fetch-project.usecase";
-import {
-    FetchProjectResourcesUseCase
-} from "../../../domain/usecases/resource-usecases/fetch-project-resources.usecase/fetch-project-resources.usecase";
+import {FetchProjectResourcesUseCase} from "../../../domain/usecases/resource-usecases/fetch-project-resources.usecase";
 import {ResourceMapper} from "../../mappers/resource.mapper";
-import {
-    DeleteResourceUseCase
-} from "../../../domain/usecases/resource-usecases/delete-resource-usecase/delete-resource.usecase";
+import {DeleteResourceUseCase} from "../../../domain/usecases/resource-usecases/delete-resource.usecase";
 
 @Injectable({providedIn: 'root'})
 export class ProjectInteractor extends IProjectInteractor {

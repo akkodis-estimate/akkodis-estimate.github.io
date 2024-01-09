@@ -12,6 +12,8 @@ import {variables} from "../../../../environments/variables";
 import {ClientRequest} from "../../../data/requests/client.request";
 import {ResourceInteractor} from "../../../data/interactors/implementations/resource.interactor";
 import {ResourceRequest} from "../../../data/requests/resource.request";
+import {ResourceResponse} from "../../../data/responses/resource.response";
+import {Observable} from "rxjs";
 
 @Component({
     selector: 'app-dashboard',
@@ -62,6 +64,7 @@ export class DashboardComponent implements OnInit {
             next: response => {
                 if (response && response.success) {
                     this.projects = response.data!;
+                    this.countResources();
                 }
             },
             error: err => {
@@ -71,8 +74,35 @@ export class DashboardComponent implements OnInit {
         });
     }
 
-    getClient(id: string): ClientResponse | undefined {
-        return this.clients.find(client => client.id === id);
+    countResourcesByProject(id?: string): Observable<number> {
+        return this.resourceInteractor.countByProject(id!);
+    }
+
+    countResources() {
+        for (let i = 0; i < this.projects.length; i++) {
+            this.resourceInteractor.fetchByProject(this.projects[i].id!).subscribe({
+                next: result => {
+                    if (result && result.success) {
+                        let resources = result.data;
+                        console.log(resources);
+                        for (let j = 0; j < resources?.length!; j++) {
+                            if (resources) {
+                                this.projects[i].numberResources! += resources[j].quantity ?? 0;
+                            }
+                        }
+                    }
+                    console.log(this.projects);
+                }
+            });
+        }
+    }
+
+    count(resources: ResourceResponse[]): number {
+        let nbResources = 0;
+        resources.forEach(value => {
+            nbResources += value.quantity ?? 1;
+        });
+        return nbResources;
     }
 
     getClientById(id: string): ClientResponse | undefined {

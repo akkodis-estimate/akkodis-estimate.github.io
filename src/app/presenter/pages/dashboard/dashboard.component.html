@@ -81,6 +81,7 @@
                             <th>Title</th>
                             <th>Client</th>
                             <th>Duration (months)</th>
+                            <th>Number of resources</th>
                             <th>Description</th>
                             <th class="text-right"></th>
                         </tr>
@@ -89,8 +90,9 @@
 
                         <tr *ngFor="let project of projects">
                             <td (click)="onClickAddResources(project)"><h2>{{project.title}}</h2></td>
-                            <td (click)="onClickAddResources(project)">{{getClient(project.client!)?.companyName}}</td>
+                            <td (click)="onClickAddResources(project)">{{getClientById(project.client!)?.companyName}}</td>
                             <td (click)="onClickAddResources(project)">{{project.duration}}</td>
+                            <td (click)="onClickAddResources(project)">{{countResourcesByProject(project.id) | async}}</td>
                             <td (click)="onClickAddResources(project)">{{project.description}}</td>
                             <td>
                                 <img class="aspect-square action "

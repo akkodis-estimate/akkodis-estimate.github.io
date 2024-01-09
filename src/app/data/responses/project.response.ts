@@ -7,4 +7,5 @@ export interface ProjectResponse extends Response {
     client?: string;
     margin?: number;
     riskProvision?: number;
+    numberResources?: number;
 }

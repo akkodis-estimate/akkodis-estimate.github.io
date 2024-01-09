@@ -7,18 +7,10 @@ import {IClientInteractor} from "../contracts/iclient.interactor";
 import {ClientMapper} from "../../mappers/client.mapper";
 import {ClientResponse} from "../../responses/client.response";
 import {ClientRequest} from "../../requests/client.request";
-import {
-    CreateClientUseCase
-} from "../../../domain/usecases/client-usescases/create-client-usecase/create-client.usecase";
-import {
-    FetchClientsUseCase
-} from "../../../domain/usecases/client-usescases/fetch-clients-usecase/fetch-clients.usecase";
-import {
-    DeleteClientUseCase
-} from "../../../domain/usecases/client-usescases/delete-client-usecase/delete-client.usecase";
-import {
-    UpdateClientUseCase
-} from "../../../domain/usecases/client-usescases/update-client-usecase/update-client.usecase";
+import {CreateClientUseCase} from "../../../domain/usecases/client-usescases/create-client.usecase";
+import {FetchClientsUseCase} from "../../../domain/usecases/client-usescases/fetch-clients.usecase";
+import {DeleteClientUseCase} from "../../../domain/usecases/client-usescases/delete-client.usecase";
+import {UpdateClientUseCase} from "../../../domain/usecases/client-usescases/update-client.usecase";
 
 @Injectable({providedIn: 'root'})
 export class ClientInteractor extends IClientInteractor {

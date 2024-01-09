@@ -11,6 +11,8 @@ import {WorkingDaysResponse} from "../../../data/responses/working-days.response
 import {LocalStorageService} from "../../services/local-storage/local-storage.service";
 import {variables} from "../../../../environments/variables";
 import {AmountHelper} from "../../../helpers/amount.helper";
+import {AccountResponse} from "../../../data/responses/account.response";
+import {AccountInteractor} from "../../../data/interactors/implementations/account.interactor";
 
 @Component({
     selector: 'app-settings',
@@ -27,13 +29,19 @@ export class SettingsComponent implements OnInit {
     currencyForm: FormGroup;
     workingDaysForm: FormGroup;
     languageForm: FormGroup;
+    changePasswordForm: FormGroup;
+    loggedAccount: AccountResponse;
 
     panels = ['First', 'Second', 'Third'];
 
     constructor(private currencyExchangeInteractor: CurrencyExchangeInteractor,
+                private accountInteractor: AccountInteractor,
                 private workingDaysInteractor: WorkingDaysInteractor,
                 private localStorageService: LocalStorageService,
-                private toastr: ToastrService,) {
+                private toastr: ToastrService) {
+
+        this.loggedAccount = localStorageService.getLoggedAccount();
+
         this.currencies = Object.values(CurrencyEnum);
 
         this.currencyForm = new FormGroup({
@@ -51,6 +59,11 @@ export class SettingsComponent implements OnInit {
 
         this.languageForm = new FormGroup({
             language: new FormControl(this.languages[0], [Validators.required]),
+        });
+
+        this.changePasswordForm = new FormGroup({
+            oldPassword: new FormControl('', [Validators.required]),
+            newPassword: new FormControl('', [Validators.required])
         });
     }
 
@@ -203,4 +216,41 @@ export class SettingsComponent implements OnInit {
     }
 
     protected readonly AmountHelper = AmountHelper;
+
+    onSubmitChangePassword() {
+        let processed: boolean = false;
+        if (this.changePasswordForm.valid) {
+            this.accountInteractor.login({
+                username: this.loggedAccount.email!,
+                password: this.changePasswordForm.value.oldPassword
+            }).subscribe({
+                next: result => {
+                    if (!processed) {
+                        processed = true;
+                        if (result && result.success) {
+                            this.accountInteractor.changePassword(this.loggedAccount.id!, this.changePasswordForm.value.newPassword).subscribe({
+                                next: value => {
+                                    this.toastr.success("Password changed successfully", 'Success');
+                                },
+                                error: err => {
+                                    this.toastr.error("Error changing password", 'Error');
+                                },
+                                complete: () => {
+                                }
+                            });
+                        } else {
+                            this.toastr.error("Password does not match", 'Error');
+                        }
+                    }
+                },
+                error: err => {
+                    this.toastr.error(err.message(), 'Error');
+                },
+                complete: () => {
+                }
+            });
+        } else {
+            this.toastr.error('Some inputs are incorrect', 'Error');
+        }
+    }
 }
