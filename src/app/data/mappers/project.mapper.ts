@@ -16,7 +16,8 @@ export class ProjectMapper extends Mapper<ProjectRequest, ProjectResponse, Proje
             description: param.description!,
             margin: param.margin!,
             client: param.client,
-            riskProvision: param.riskProvision
+            riskProvision: param.riskProvision,
+            numberResources: param.numberResources
         }
     }
 
@@ -29,7 +30,8 @@ export class ProjectMapper extends Mapper<ProjectRequest, ProjectResponse, Proje
             description: param.description!,
             margin: param.margin!,
             client: param.client,
-            riskProvision: param.riskProvision
+            riskProvision: param.riskProvision,
+            numberResources: param.numberResources
         };
     }
 

@@ -3,28 +3,16 @@ import {AccountRequest} from "../../requests/account.request";
 import {map, Observable, of} from "rxjs";
 import {AccountEntity} from "../../../domain/entities";
 import {Injectable} from "@angular/core";
-import {
-    FetchAccountUseCase
-} from "../../../domain/usecases/account-usescases/fetch-account-usecase/fetch-account.usecase";
+import {FetchAccountUseCase} from "../../../domain/usecases/account-usescases/fetch-account.usecase";
 import {AccountMapper} from "../../mappers/account.mapper";
 import {AccountResponse} from "../../responses/account.response";
-import {
-    LoginAccountUseCase
-} from "../../../domain/usecases/account-usescases/login-account-usecase/login-account.usecase";
-import {
-    CreateAccountUseCase
-} from "../../../domain/usecases/account-usescases/create-account-usecase/create-account.usecase";
+import {LoginAccountUseCase} from "../../../domain/usecases/account-usescases/login-account.usecase";
+import {CreateAccountUseCase} from "../../../domain/usecases/account-usescases/create-account.usecase";
 import {v4 as uuidv4} from 'uuid';
 import {Result} from "../../../core/params/result";
-import {
-    FetchAccountsUseCase
-} from "../../../domain/usecases/account-usescases/fetch-accounts-usecase/fetch-accounts.usecase";
-import {
-    UpdateAccountUseCase
-} from "../../../domain/usecases/account-usescases/update-account-usecase/update-account.usecase";
-import {
-    DeleteAccountUseCase
-} from "../../../domain/usecases/account-usescases/delete-account-usecase/delete-account.usecase";
+import {FetchAccountsUseCase} from "../../../domain/usecases/account-usescases/fetch-accounts.usecase";
+import {UpdateAccountUseCase} from "../../../domain/usecases/account-usescases/update-account.usecase";
+import {DeleteAccountUseCase} from "../../../domain/usecases/account-usescases/delete-account.usecase";
 
 @Injectable({providedIn: 'root'})
 export class AccountInteractor extends IAccountInteractor {

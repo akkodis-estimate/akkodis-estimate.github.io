@@ -270,6 +270,8 @@ export class ResourcesComponent implements OnInit {
                 transportation: this.resourceForm.value.transportationPeriod + " " + this.resourceForm.value.transportationCurrency + " " + this.resourceForm.value.transportation,
             };
 
+            console.log(request);
+
             if (this.selectedResource && this.selectedResource.id) {
                 this.resourceInteractor.update(this.selectedResource.id!, request).subscribe({
                     next: value => {
@@ -317,8 +319,9 @@ export class ResourcesComponent implements OnInit {
             basicSalary: this.resourceForm.value.basicSalary,
             resourceType: this.resourceForm.value.resourceType,
             workload: this.resourceForm.value.workload,
-            allowancePeriod: this.resourceForm.value.allowancePeriod,
-            allowanceCurrency: this.resourceForm.value.allowanceCurrency,
+            quantity: this.resourceForm.value.quantity,
+            allowancePeriod: this.resourceForm.value.basicSalaryPeriod,
+            allowanceCurrency: this.resourceForm.value.basicSalaryCurrency,
             allowance: this.resourceForm.value.basicSalary,
             gratuityPeriod: this.resourceForm.value.gratuityPeriod,
             gratuityCurrency: this.resourceForm.value.gratuityCurrency,
@@ -355,6 +358,10 @@ export class ResourcesComponent implements OnInit {
             transportation: this.resourceForm.value.transportation,
         };
         this.resourceForm.setValue(this.inputs);
+    }
+
+    getClientById(id: string): ClientResponse | undefined {
+        return this.clients.find(client => client.id === id);
     }
 
     onChangePeriod() {

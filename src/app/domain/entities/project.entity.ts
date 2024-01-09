@@ -7,4 +7,5 @@ export interface ProjectEntity extends Entity {
     client?: string;
     margin?: number;
     riskProvision?: number;
+    numberResources?: number;
 }

@@ -1,7 +1,7 @@
 import {FetchAccountUseCase} from "./fetch-account.usecase";
-import {IAccountRepository} from "../../../repositories/iaccount.repository";
-import {AccountEntity} from "../../../entities";
-import {MOCK_ACCOUNTS} from "../../../../data/datasources/remote/firebase/account/account.repository.spec";
+import {IAccountRepository} from "../../repositories/iaccount.repository";
+import {AccountEntity} from "../../entities";
+import {MOCK_ACCOUNTS} from "../../../data/datasources/remote/firebase/account/account.repository.spec";
 
 describe('FetchAccountUseCase', () => {
 

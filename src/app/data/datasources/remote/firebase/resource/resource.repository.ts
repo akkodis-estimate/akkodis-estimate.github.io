@@ -12,20 +12,20 @@ import {ResourceEntity} from "../../../../../domain/entities/resource.entity";
 })
 export class ResourceRepository extends IResourceRepository {
 
-    private collection: AngularFirestoreCollection<ResourceEntity>;
+    private resourceCollection: AngularFirestoreCollection<ResourceEntity>;
 
     constructor(private firestore: AngularFirestore) {
         super();
-        this.collection = firestore.collection<ResourceEntity>(DbTables.RESOURCES);
+        this.resourceCollection = firestore.collection<ResourceEntity>(DbTables.RESOURCES);
     }
 
     override create(entity: ResourceEntity): Observable<ResourceEntity> {
-        this.collection.doc(entity.id).set(entity);
+        this.resourceCollection.doc(entity.id).set(entity);
         return of(entity);
     }
 
     delete(id: string): Observable<void> {
-        return from(this.collection.doc(id).delete());
+        return from(this.resourceCollection.doc(id).delete());
     }
 
     fetch(id: string): Observable<ResourceEntity> {
@@ -39,7 +39,7 @@ export class ResourceRepository extends IResourceRepository {
     }
 
     update(id: string, entity: ResourceEntity): Observable<void> {
-        return from(this.collection.doc(id).update(entity));
+        return from(this.resourceCollection.doc(id).update(entity));
     }
 
     search(conditions: Condition[], options: Option[]): Observable<ResourceEntity[]> {
@@ -50,6 +50,11 @@ export class ResourceRepository extends IResourceRepository {
         return this.firestore.collection<ResourceEntity>(DbTables.RESOURCES, ref => ref
             .where("delete", "==", false))
             .valueChanges();
+    }
+
+    countByProject(projectId: string): Observable<number> {
+        let nbResources = 0;
+        return of(nbResources);
     }
 
 }

@@ -12,6 +12,8 @@ import {variables} from "../../../../environments/variables";
 import {ClientRequest} from "../../../data/requests/client.request";
 import {ResourceInteractor} from "../../../data/interactors/implementations/resource.interactor";
 import {ResourceRequest} from "../../../data/requests/resource.request";
+import {ResourceResponse} from "../../../data/responses/resource.response";
+import {Observable} from "rxjs";
 
 @Component({
     selector: 'app-dashboard',
@@ -71,9 +73,21 @@ export class DashboardComponent implements OnInit {
         });
     }
 
-    getClient(id: string): ClientResponse | undefined {
-        return this.clients.find(client => client.id === id);
+    countResourcesByProject(id?: string): Observable<number> {
+        return this.resourceInteractor.countByProject(id!);
     }
+
+    countResources(resources: ResourceResponse[]): number {
+        let nbResources = 0;
+        resources.forEach(value => {
+            nbResources += value.workload ?? 1;
+        });
+        return nbResources;
+    }
+
+    // getClient(id: string): ClientResponse | undefined {
+    //     return this.clients.find(client => client.id === id);
+    // }
 
     getClientById(id: string): ClientResponse | undefined {
         return this.clients.find(client => client.id === id);

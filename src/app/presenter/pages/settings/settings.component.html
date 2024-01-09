@@ -7,7 +7,7 @@
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#currencyExchangesCollapse" aria-expanded="false"
                                 aria-controls="currencyExchangesCollapse">
-                            <h4 class="card-title d-inline-block"><b>{{currencyExchanges.length}}</b> Currencies </h4>
+                            <h4 class="card-title d-inline-block">Currencies </h4>
                         </button>
                     </h2>
                     <div id="currencyExchangesCollapse" class="accordion-collapse collapse"
@@ -105,10 +105,7 @@
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#workingDaysCollapse" aria-expanded="false"
                                 aria-controls="workingDaysCollapse">
-                            <h4 class="card-title d-inline-block">
-                                <b *ngIf="workingDaysResponse">{{AmountHelper.calculateBillableWorkingDays(workingDaysResponse)}}</b>
-                                Billable working days
-                            </h4>
+                            <h4 class="card-title d-inline-block">Days</h4>
                         </button>
                     </h2>
                     <div id="workingDaysCollapse" class="accordion-collapse collapse"

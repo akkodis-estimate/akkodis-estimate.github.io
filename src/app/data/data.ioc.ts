@@ -2,15 +2,15 @@ import {Provider} from "@angular/core";
 import {IAccountInteractor} from "./interactors/contracts/iaccount.interactor";
 import {AccountInteractor} from "./interactors/implementations/account.interactor";
 import {AccountRepository} from "./datasources/remote/firebase/account/account.repository";
-import {FetchAccountUseCase} from "../domain/usecases/account-usescases/fetch-account-usecase/fetch-account.usecase";
-import {LoginAccountUseCase} from "../domain/usecases/account-usescases/login-account-usecase/login-account.usecase";
-import {CreateAccountUseCase} from "../domain/usecases/account-usescases/create-account-usecase/create-account.usecase";
+import {FetchAccountUseCase} from "../domain/usecases/account-usescases/fetch-account.usecase";
+import {LoginAccountUseCase} from "../domain/usecases/account-usescases/login-account.usecase";
+import {CreateAccountUseCase} from "../domain/usecases/account-usescases/create-account.usecase";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {IClientInteractor} from "./interactors/contracts/iclient.interactor";
 import {ClientInteractor} from "./interactors/implementations/client.interactor";
 import {ClientRepository} from "./datasources/remote/firebase/client/client.repository";
-import {CreateClientUseCase} from "../domain/usecases/client-usescases/create-client-usecase/create-client.usecase";
-import {FetchClientsUseCase} from "../domain/usecases/client-usescases/fetch-clients-usecase/fetch-clients.usecase";
+import {CreateClientUseCase} from "../domain/usecases/client-usescases/create-client.usecase";
+import {FetchClientsUseCase} from "../domain/usecases/client-usescases/fetch-clients.usecase";
 import {IProjectInteractor} from "./interactors/contracts/iproject.interactor";
 import {ProjectInteractor} from "./interactors/implementations/project.interactor";
 import {ProjectRepository} from "./datasources/remote/firebase/project/project.repository";
@@ -19,17 +19,13 @@ import {FetchProjectsUseCase} from "../domain/usecases/project-usecases/fetch-pr
 import {IResourceInteractor} from "./interactors/contracts/iresource.interactor";
 import {ResourceInteractor} from "./interactors/implementations/resource.interactor";
 import {ResourceRepository} from "./datasources/remote/firebase/resource/resource.repository";
-import {
-    CreateResourceUseCase
-} from "../domain/usecases/resource-usecases/create-resource-usecase/create-resource.usecase";
-import {
-    FetchResourcesUseCase
-} from "../domain/usecases/resource-usecases/fetch-resources-usecase/fetch-resources.usecase";
+import {CreateResourceUseCase} from "../domain/usecases/resource-usecases/create-resource.usecase";
+import {FetchResourcesUseCase} from "../domain/usecases/resource-usecases/fetch-resources.usecase";
 import {IWorkingDaysInteractor} from "./interactors/contracts/iworking-days.interactor";
 import {WorkingDaysInteractor} from "./interactors/implementations/working-days.interactor";
 import {WorkingDaysRepository} from "./datasources/remote/firebase/working-days/working-days.repository";
 import {FetchWorkingDaysUseCase} from "../domain/usecases/working-days-usescases/fetch-working-days.usecase";
-import {FetchAccountsUseCase} from "../domain/usecases/account-usescases/fetch-accounts-usecase/fetch-accounts.usecase";
+import {FetchAccountsUseCase} from "../domain/usecases/account-usescases/fetch-accounts.usecase";
 import {ICurrencyExchangeInteractor} from "./interactors/contracts/icurrency-exchange.interactor";
 import {CurrencyExchangeInteractor} from "./interactors/implementations/currency-exchange.interactor";
 import {CurrencyExchangeRepository} from "./datasources/remote/firebase/currency-exchange/currency-exchange.repository";
@@ -39,21 +35,15 @@ import {
 import {
     CreateCurrencyExchangeUseCase
 } from "../domain/usecases/currency-exchange-usecases/create-currency-exchange.usecase";
-import {
-    FetchProjectResourcesUseCase
-} from "../domain/usecases/resource-usecases/fetch-project-resources.usecase/fetch-project-resources.usecase";
-import {DeleteClientUseCase} from "../domain/usecases/client-usescases/delete-client-usecase/delete-client.usecase";
-import {UpdateClientUseCase} from "../domain/usecases/client-usescases/update-client-usecase/update-client.usecase";
-import {DeleteAccountUseCase} from "../domain/usecases/account-usescases/delete-account-usecase/delete-account.usecase";
-import {UpdateAccountUseCase} from "../domain/usecases/account-usescases/update-account-usecase/update-account.usecase";
+import {FetchProjectResourcesUseCase} from "../domain/usecases/resource-usecases/fetch-project-resources.usecase";
+import {DeleteClientUseCase} from "../domain/usecases/client-usescases/delete-client.usecase";
+import {UpdateClientUseCase} from "../domain/usecases/client-usescases/update-client.usecase";
+import {DeleteAccountUseCase} from "../domain/usecases/account-usescases/delete-account.usecase";
+import {UpdateAccountUseCase} from "../domain/usecases/account-usescases/update-account.usecase";
 import {DeleteProjectUseCase} from "../domain/usecases/project-usecases/delete-project.usecase";
 import {UpdateProjectUseCase} from "../domain/usecases/project-usecases/update-project.usecase";
-import {
-    DeleteResourceUseCase
-} from "../domain/usecases/resource-usecases/delete-resource-usecase/delete-resource.usecase";
-import {
-    UpdateResourceUseCase
-} from "../domain/usecases/resource-usecases/update-resource-usecase/update-resource.usecase";
+import {DeleteResourceUseCase} from "../domain/usecases/resource-usecases/delete-resource.usecase";
+import {UpdateResourceUseCase} from "../domain/usecases/resource-usecases/update-resource.usecase";
 import {FetchProjectUseCase} from "../domain/usecases/project-usecases/fetch-project.usecase";
 import {
     DeleteCurrencyExchangeUseCase
@@ -62,6 +52,7 @@ import {
     UpdateCurrencyExchangeUseCase
 } from "../domain/usecases/currency-exchange-usecases/update-currency-exchange.usecase";
 import {UpdateWorkingDaysUseCase} from "../domain/usecases/working-days-usescases/update-working-days.usecase";
+import {CountProjectResourcesUseCase} from "../domain/usecases/resource-usecases/count-project-resources.usecase";
 
 export const DATA_ACCOUNT_IOC: Provider[] = [
     {
@@ -208,6 +199,11 @@ export const DATA_RESOURCE_IOC: Provider[] = [
         deps: [ResourceRepository],
         provide: UpdateResourceUseCase,
         useFactory: (repository: ResourceRepository) => new UpdateResourceUseCase(repository),
+    },
+    {
+        deps: [ResourceRepository],
+        provide: CountProjectResourcesUseCase,
+        useFactory: (repository: ResourceRepository) => new CountProjectResourcesUseCase(repository),
     }
 ];
 
