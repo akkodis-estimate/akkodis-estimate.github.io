@@ -6,4 +6,6 @@ import {Injectable} from "@angular/core";
 @Injectable({providedIn: 'root'})
 export abstract class IAccountRepository extends BaseRepository<AccountEntity> {
     abstract login(params: { username: string, password: string }): Observable<AccountEntity[]>;
+
+    abstract changePassword(params: { id: string, password: string }): Observable<AccountEntity[]>;
 }

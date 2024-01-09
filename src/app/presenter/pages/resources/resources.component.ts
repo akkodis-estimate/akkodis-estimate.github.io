@@ -269,9 +269,6 @@ export class ResourcesComponent implements OnInit {
                 parking: this.resourceForm.value.parkingPeriod + " " + this.resourceForm.value.parkingCurrency + " " + this.resourceForm.value.parking,
                 transportation: this.resourceForm.value.transportationPeriod + " " + this.resourceForm.value.transportationCurrency + " " + this.resourceForm.value.transportation,
             };
-
-            console.log(request);
-
             if (this.selectedResource && this.selectedResource.id) {
                 this.resourceInteractor.update(this.selectedResource.id!, request).subscribe({
                     next: value => {
@@ -384,11 +381,15 @@ export class ResourcesComponent implements OnInit {
             currency: this.displayForm.value.currency,
         };
 
-        let indexCurrency: number = this.displayCurrencies.indexOf(request.currency!);
-        if (indexCurrency > -1) {
-            this.displayCurrencies.splice(indexCurrency, 1);
+        if (AmountHelper.getRateFromGivenCurrencies(request.currency!, CurrencyEnum.AED.toString(), this.currencyExchanges)) {
+            let indexCurrency: number = this.displayCurrencies.indexOf(request.currency!);
+            if (indexCurrency > -1) {
+                this.displayCurrencies.splice(indexCurrency, 1);
+            } else {
+                this.displayCurrencies.push(request.currency!);
+            }
         } else {
-            this.displayCurrencies.push(request.currency!);
+            this.toastr.error('No exchange for this currency. Please add currency exchange', 'Display Amount');
         }
     }
 

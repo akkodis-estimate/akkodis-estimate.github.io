@@ -62,4 +62,9 @@ export class AccountInteractor extends IAccountInteractor {
         return of(this.mapper.toEmptyResponse());
     }
 
+    changePassword(id: string, newPassword: string): Observable<Result<AccountResponse>> {
+        let accountEntity: AccountEntity = {id: id, password: newPassword};
+        this.updateAccountUseCase.execute({id: id, request: accountEntity});
+        return of(this.mapper.toEmptyResponse());
+    }
 }

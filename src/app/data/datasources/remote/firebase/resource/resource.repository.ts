@@ -54,6 +54,7 @@ export class ResourceRepository extends IResourceRepository {
 
     countByProject(projectId: string): Observable<number> {
         let nbResources = 0;
+        
         return of(nbResources);
     }
 

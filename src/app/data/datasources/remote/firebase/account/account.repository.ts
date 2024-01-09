@@ -28,6 +28,10 @@ export class AccountRepository extends IAccountRepository {
             .valueChanges();
     }
 
+    changePassword(params: { id: string; password: string; }): Observable<AccountEntity[]> {
+        throw new Error("Method not implemented.");
+    }
+
     create(account: AccountEntity): Observable<AccountEntity> {
         this.collection.doc(account.id).set(account);
         return of(account);
